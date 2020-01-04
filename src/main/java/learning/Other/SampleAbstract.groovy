@@ -1,5 +1,9 @@
 package learning.Other
 
+//Abstract classes are implemented using "extends" keyword
+//Only one abstract class can be implemented
+//Cannot be instantiated
+//An abstract class can extend another java class and also implements interfaces
 abstract class SampleAbstract implements SampleInterface {
 
     //An abstract class can have public, private.. varibles
