@@ -88,6 +88,12 @@
             <version>1.3.1.1</version>
         </dependency>
 
+        <!--  Browser Stack Dependency -->
+        <dependency>
+            <groupId>com.browserstack</groupId>
+            <artifactId>browserstack-local-java</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -39,7 +39,7 @@ class ReadMeUtil {
             scenarios.each { sc1 ->
                 writer.write( sname + SPLITTER + sc1 + "\n")
             }
-
+            writer.close()
         } catch (Exception e) {
             e.printStackTrace()
         }
@@ -52,6 +52,7 @@ class ReadMeUtil {
         try {
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("ReadMe.md"), StandardCharsets.UTF_8))
             writer.write( newLine + buildMarkDownTable(rows) + newLine + defaultContent)
+            writer.close()
         } catch (Exception e) {                                                                                                                 
             e.printStackTrace()
         }
