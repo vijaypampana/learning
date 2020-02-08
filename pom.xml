@@ -13,7 +13,7 @@
 
     <properties>
         <groovy.version>2.5.7</groovy.version>
-        <rest.assured.version>3.1.0</rest.assured.version>
+        <rest.assured.version>4.2.0</rest.assured.version>
         <cucumber.version>2.4.0</cucumber.version>
         <extend.reports.version>3.1.5</extend.reports.version>
         <appium.version>7.0.0</appium.version>

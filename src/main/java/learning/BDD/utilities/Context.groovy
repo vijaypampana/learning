@@ -6,9 +6,8 @@ import learning.BDD.utilities.reports.ReportDriver
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
-import sun.text.normalizer.Utility
-
-import java.util.logging.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Context extends APIContext {
 
@@ -24,7 +23,7 @@ class Context extends APIContext {
         return (Context) THREAD_LOCAL.get()
     }
 
-    public static void set(final Context context) {
+    public static void setContext(final Context context) {
         THREAD_LOCAL.set(context)
     }
 
@@ -32,7 +31,8 @@ class Context extends APIContext {
         THREAD_LOCAL.remove()
     }
 
-    private static final org.testng.log4testng.Logger logger = Logger.getLogger(Context.class)
+//    private static final org.testng.log4testng.Logger logger = Logger.getLogger(Context.class)
+    private static final Logger logger = LoggerFactory.getLogger(Context.class)
 
     private static final int IMPLICIT_TIMEOUT_IN_SECONDS = 15
 
@@ -40,14 +40,14 @@ class Context extends APIContext {
 
     boolean jenkinFlag = false
     boolean bIOS = false
-    //TBD
+
+    //**TBD**
     private ReportDriver reports
 
     private DesiredCapabilities oCapabilities = new DesiredCapabilities()
     private WebDriver oWebDriver
     private WebDriverWait oWebDriverWait
     private WebDriverWait oWebDriverShortWait
-    //TBD
     private CommonConfig oConfig
 
     private String sCurrentPage = ""

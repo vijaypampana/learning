@@ -1,5 +1,6 @@
 package learning.BDD.utilities
 
+import io.restassured.authentication.BasicAuthScheme
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.config.JsonConfig
 import io.restassured.config.RestAssuredConfig
@@ -7,7 +8,6 @@ import io.restassured.config.SSLConfig
 import io.restassured.path.json.config.JsonPathConfig
 import io.restassured.response.Response
 import io.restassured.response.ValidatableResponse
-import io.restassured.response.ValidatableResponseLogSpec
 import io.restassured.specification.RequestSpecification
 
 class APIContext {
@@ -16,6 +16,7 @@ class APIContext {
     private RequestSpecification requestSpecification = null
     private Response response = null
     private ValidatableResponse validatableResponse = null
+    private BasicAuthScheme basicAuthScheme = null
 
     private Map<String, String> headers = new HashMap<>()
     private Map<String, String> params = new HashMap<>()
@@ -156,5 +157,14 @@ class APIContext {
 
     void clearBody() {
         this.body ""
+    }
+
+    BasicAuthScheme getBasicAuthScheme() {
+        return basicAuthScheme
+    }
+
+    void setBasicAuthScheme(String userName, String password) {
+        this.basicAuthScheme.setUserName(userName)
+        this.basicAuthScheme.setPassword(password)
     }
 }
