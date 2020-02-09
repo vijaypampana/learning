@@ -1,0 +1,32 @@
+# Web Driver Information
+webDriverType: 'API'    # API, PERFECTO, BrowserStack, Appium, AppiumLocal, Selenium, Zalenium, SeleniumLocal
+webDriverTimeOut: 30
+webDriverShortWait: 10
+webDriverAuthentication:
+  username: ''
+  password: ''
+
+
+# Application Under Test
+applicationType: 'MyTest'
+applicationEnvironment: 'ACC01'
+screenshotForAllSteps: false
+
+# Desired Capabilities
+capability:
+  perfectoSessionID: ''
+  automationName: ''   # Appium, Selendroid, UiAutomator2, Espresso, XCUITest
+  browserName: ''   # Safari, Chrome, Firefox, Opera, IE, Edge, Android, IOS
+  app: ''
+  deviceName: ''
+  platformName: ''
+  platformVersion: ''
+
+
+# Rally Details
+rallyDev:
+  url: ''
+  apiKey: ''
+  projectName: ''
+  testSetToUploadResult: ''
+

@@ -74,7 +74,8 @@ class DataUtil {
             return retrieveValidatableResponse(key).extract().body().jsonPath().getString(query)
         } else if(retrieveValidatableResponse(key).extract().contentType().toLowerCase().contains("html")) {
             return retrieveValidatableResponse(key).extract().body().htmlPath().getString(query)
-        }
+        } else
+            return null
     }
 
 }
