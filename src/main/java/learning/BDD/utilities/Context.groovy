@@ -8,6 +8,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
@@ -17,12 +18,29 @@ import learning.BDD.utilities.reports.ReportDriver
 import learning.BDD.utilities.utilEnum.BrowserType
 import learning.BDD.utilities.utilEnum.WebDriverType
 import org.apache.commons.lang3.StringUtils
+import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.edge.EdgeDriver
+import org.openqa.selenium.firefox.FirefoxDriver
+import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.firefox.FirefoxProfile
+import org.openqa.selenium.ie.InternetExplorerDriver
+import org.openqa.selenium.ie.InternetExplorerOptions
+import org.openqa.selenium.opera.OperaDriver
+import org.openqa.selenium.remote.CapabilityType
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
+import org.openqa.selenium.safari.SafariDriver
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import java.lang.reflect.Field
+import java.lang.reflect.InvocationTargetException
+import java.util.concurrent.TimeUnit
 
 class Context extends APIContext {
 
@@ -382,25 +400,483 @@ class Context extends APIContext {
 
     private void startPerfectoDriver(BrowserType sBrowserType, String sDeviceName) {
 
+        if(sBrowserType == null) {
+            oCapabilities.setBrowserName("mobileOS")
+
+            if(oConfig.getCapability(MobileCapabilityType.APP).toString().toLowerCase().endsWith(".ipa")) {
+                bIOS = true
+            }
+
+            if(bIOS) {
+                oConfig.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest")
+            } else {
+                oConfig.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2")
+            }
+        } else {
+            switch (sBrowserType) {
+                case BrowserType.Firefox:
+                case BrowserType.Opera:
+                case BrowserType.IE:
+                case BrowserType.Edge:
+                    break
+                case BrowserType.Android:
+                    oCapabilities.setBrowserName("Browser")
+                    break
+                case BrowserType.IOS:
+                case BrowserType.Safari:
+                    oCapabilities.setBrowserName("Safari")
+                    break
+                case BrowserType.Chrome:
+                    oCapabilities.setBrowserName("Chrome")
+                    break
+                default:
+                    break
+            }
+        }
+
+        oCapabilities.setCapability(MobileCapabilityType.DEVICE_NAME, Utility.getTextByOS(sDeviceName))
+
+        if(!oConfig.getCapability().getPlatformName().isEmpty()) {
+            oCapabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, oConfig.getCapability().getPlatformName())
+        }
+
+        if(!oConfig.getCapability().getPlatformVersion().isEmpty()) {
+            oCapabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, oConfig.getCapability().getPlatformVersion())
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create()
+        logger.info ("Desired Capabilities\n" + gson.toJson(oCapabilities.toJson()))
+
+        if(bIOS) {
+            ReportPortalUtils.appendDescription("Platform: 'IOS'")
+            ReportPortalUtils.appendTags("iOS")
+            oWebDriver = new IOSDriver(oConfig.getWebDriverType().getURL(), oCapabilities)
+        } else {
+            ReportPortalUtils.appendDescription("Platform: 'Android'")
+            ReportPortalUtils.appendTags("Android")
+            oWebDriver = new AndroidDriver(oConfig.getWebDriverType().getURL(), oCapabilities)
+        }
+
+        if(isMobile()) {
+            try {
+                Thread.sleep(5000)
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage())
+            }
+
+            if(!oConfig.getCapability().getApp().isEmpty()) {
+                PerfectoUtils.installApp(Utility.getTextByOS(oConfig.getCapability().getApp()))
+            }
+
+            PerfectoUtils.launchApp(bIOS ? oConfig.getApplicationType().getsIOSBundleID() : oConfig.getApplicationType().getsAndroidPackage())
+            getAppiumDriver().context("NATIVE_APP")
+
+
+        }
+
     }
 
-    private void startRemoteWebDriver(BrowserType sBrowserType, String sDeviceName) {
+    private void startRemoteWebDriver(BrowserType sBrowserType) {
+        switch (sBrowserType) {
+            case BrowserType.Firefox:
+                oCapabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, getFirefoxOptions())
+                oCapabilities.setBrowserName("firefox")
+                break
+            case BrowserType.Opera:
+                oCapabilities.setBrowserName("opera")
+                break
+            case BrowserType.IE:
+                oCapabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true)
+                oCapabilities.setBrowserName("internet explorer")
+                break
+            case BrowserType.Edge:
+                oCapabilities.setBrowserName("MicrosoftEdge")
+                break
+            case BrowserType.Android:
+                oCapabilities.setBrowserName("android")  //To do
+                break
+            case BrowserType.IOS:
+                oCapabilities.setBrowserName("iPhone")  //To do
+                break
+            case BrowserType.Safari:
+                oCapabilities.setBrowserName("safari")
+                break
+            case BrowserType.Chrome:
+                oCapabilities.setCapability(ChromeOptions.CAPABILITY, getChromeOptions())
+                oCapabilities.setBrowserName("chrome")
+                break
+            default:
+                //To do custom error reporting
+                break
+        }
+
+        if(!oConfig.getCapability().getPlatformName().isEmpty()) {
+            oCapabilities.setCapability(CapabilityType.PLATFORM_NAME, oConfig.getCapability().getPlatformName().toUpperCase())
+        }
+
+        if(!oConfig.getCapability().getPlatformVersion().isEmpty()) {
+            oCapabilities.setCapability(CapabilityType.VERSION, oConfig.getCapability().getPlatformVersion())
+        }
+
+        oWebDriver = new RemoteWebDriver(oConfig.getWebDriverType().getURL(), oCapabilities)
 
     }
 
-    private void startPerfectoWebDriver(BrowserType sBrowserType, String sDeviceName) {
+    private void startPerfectoWebDriver(BrowserType sBrowserType) {
+        switch (sBrowserType) {
+            case BrowserType.Firefox:
+                oConfig.getCapability().setPlatformName("Windows")
+                oCapabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, getFirefoxOptions())
+                oCapabilities.setBrowserName("firefox")
+                break
+            case BrowserType.IE:
+                oConfig.getCapability().setPlatformName("Windows")
+                oCapabilities.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true)
+                oCapabilities.setBrowserName("internet explorer")
+                break
+            case BrowserType.Edge:
+                oConfig.getCapability().setPlatformName("Windows")
+                oCapabilities.setBrowserName("MicrosoftEdge")
+                break
+            case BrowserType.Safari:
+                oConfig.getCapability().setPlatformName("Mac")
+                oCapabilities.setBrowserName("safari")
+                break
+            case BrowserType.Chrome:
+                oConfig.getCapability().setPlatformName("Windows")
+                oCapabilities.setCapability(ChromeOptions.CAPABILITY, getChromeOptions())
+                oCapabilities.setBrowserName("chrome")
+                break
+            default:
+                //To do custom error reporting
+                break
+        }
 
+        oCapabilities.setCapability("resolution", "1920*1080")
+        if(!oConfig.getCapability().getPlatformName().isEmpty()) {
+            oCapabilities.setCapability(CapabilityType.PLATFORM_NAME, oConfig.getCapability().getPlatformName().toUpperCase())
+        }
+
+        if(!oConfig.getCapability().getPlatformVersion().isEmpty()) {
+            oCapabilities.setCapability(CapabilityType.VERSION, oConfig.getCapability().getPlatformVersion())
+        } else {
+            oCapabilities.setCapability(CapabilityType.VERSION. "latest")
+        }
+
+        oWebDriver = new RemoteWebDriver(oConfig.getWebDriverType().getURL(), oCapabilities)
     }
 
     private void startLocalDriver(BrowserType oBrowserType, String sDeviceName) {
+        switch (oBrowserType) {
+            case BrowserType.Firefox:
+                oWebDriver = new FirefoxDriver(getFirefoxOptions())
+                break
+            case BrowserType.Opera:
+                oWebDriver = new OperaDriver()
+                break
+            case BrowserType.IE:
+                oWebDriver = new InternetExplorerDriver(getInternetExplorerOptions())
+                break
+            case BrowserType.Edge:
+                oWebDriver = new EdgeDriver()
+                break
+            case BrowserType.Android:
+                //To do
+                break
+            case BrowserType.IOS:
+                //To do
+                break
+            case BrowserType.Safari:
+                oWebDriver = new SafariDriver()
+                break
+            case BrowserType.Chrome:
+                oWebDriver = new ChromeDriver(getChromeOptions(sDeviceName))
+                break
+            default:
+                //To do custom error reporting
+                break
+        }
 
+        oWebDriver.manage().window().maximize()
     }
 
+    private ChromeOptions getChromeOptions() {
+        return getChromeOptions("")
+    }
 
+    private ChromeOptions getChromeOptions(String sDeviceName) {
+        ChromeOptions options = new ChromeOptions()
+        if(StringUtils.isEmpty(sDeviceName)) {
+            options.addArguments("disable-extensions")
+            options.addArguments("--start-maximized")
+            options.addArguments("disable-infobars")
+            options.setExperimentalOption("useAutomationExtension", false)
+        } else {
+            Map<String, String> mobileEmulation = new HashMap<>()
+            mobileEmulation.put("deviceName", sDeviceName)
+            options.setExperimentalOption("mobileEmulation", mobileEmulation)
+        }
+        return options
+    }
 
+    private FirefoxOptions getFirefoxOptions() {
+        FirefoxProfile profile = new FirefoxProfile()
+        profile.setPreference("network.automatic-ntlm-auth.trusted-uris", ".internal.cigna.com,.cigna.com,.cignaglobal.com")
+        oCapabilities.setCapability(FirefoxDriver.PROFILE, profile)
+        oCapabilities.setCapability("acceptInsecureCerts", true)
+        oCapabilities.setCapability("moz:webdriverClick", false)
+        return new FirefoxOptions(oCapabilities)
+    }
 
+    private InternetExplorerOptions getInternetExplorerOptions() {
+        InternetExplorerOptions ieOptions = new InternetExplorerOptions()
+        ieOptions.destructivelyEnsureCleanSession()
+        return ieOptions
+    }
 
+    private void closeDriver() {
+        if(oWebDriver!=null) {
+            oWebDriver.quit()
+            stopBSTunnel()
+        }
+    }
 
+    private void turnOnImplicitWait() {
+        oWebDriver.manage().timeouts().implicitlyWait(IMPLICIT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+    }
 
+    private void turnOffImplicitWait() {
+        oWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS)
+    }
+
+    private boolean isAndroid() {
+        boolean bReturn = false
+        if(oWebDriver instanceof AndroidDriver && oConfig.getCapability().getBrowserName() == null) {
+            bReturn = true
+        }
+        return bReturn
+    }
+
+    private boolean isIOS() {
+        boolean bReturn = false
+        if(oWebDriver instanceof IOSDriver && oConfig.getCapability().getBrowserName() == null) {
+            bReturn = true
+        }
+        return bReturn
+    }
+
+    private boolean isMobile() {
+        boolean bReturn = false
+        if(isIOS() || isAndroid()) {
+            bReturn = true
+        }
+        return bReturn
+    }
+
+    private boolean isAPI() {
+        boolean bReturn = false
+        if(oConfig.getWebDriverType().equals(WebDriverType.API)) {
+            bReturn = true
+        }
+        return bReturn
+    }
+
+    private boolean isWeb() {
+        boolean bReturn = false
+        if(!isMobile() && !isAPI()) {
+            bReturn = true
+        }
+        return bReturn
+    }
+
+    private String getPlatform() {
+        if(isMobile())
+            return "Mobile"
+        else if(isWeb())
+            return "Web"
+        else if(isAPI())
+            return "API"
+        else
+            return "Unknown"
+    }
+
+    private String getMobilePlatform() {
+        if(isAndroid()) {
+            return "Android"
+        } else if(isIOS()) {
+            return "IOS"
+        } else {
+            return "Not Mobile"
+        }
+    }
+
+    ReportDriver getReports() {
+        return reports
+    }
+
+    ReportDriver getReports(String type) {
+        setReports(type)
+        return getReports()
+    }
+
+    //TBD
+    void setReports(String type) {
+        if(reports == null) {
+            reports = new ReportDriver(type)
+            reports.initialize()
+        }
+    }
+
+    //Find Element using By
+    boolean find(By oBy) {
+        return findElement(oBy).isDisplayed()
+    }
+
+    //Find Element Using String object
+    boolean find(String sObject) {
+        return findElement(sObject).isDisplayed()
+    }
+
+    //Find WebElement
+    boolean find(WebElement element) {
+        return element.isDisplayed()
+    }
+
+    WebElement findElement(By oBy) {
+        return oWebDriver.findElement(oBy)
+    }
+
+    WebElement findElement(String sWebElement) {
+        return findElement(sCurrentPage, sWebElement)
+    }
+
+    WebElement findElement(String sPage, String sWebElement) {
+        WebElement element = searchElement(getPageInstance(sPage), sWebElement)
+        if(element == null) {
+            logger.error("$sWebElement is missing in the pageFactory")
+        }
+        return element
+    }
+
+    Object getPageInstance(String sPage) {
+        String sSeparator = "."
+        if(!oPageInstance.containsKey(sPage)) {
+            try {
+                oPageInstance.put(sPage, Class.forName(BASE_PACKAGE + sSeparator + oConfig.getApplicationType().name().toLowerCase() + sSeparator + getPlatform().toLowerCase() + processPage(sPage)).getDeclaredConstructor().newInstance())
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException error) {
+                logger.error(error.getMessage())
+            }
+        }
+        return oPageInstance.get(sPage)
+    }
+
+    private String processPage(String sPage) {
+        String sReturn = ".pagefactory"
+        String[] aPage = sPage.split("\\.")
+        aPage.each { val ->
+            sReturn += "." + val.toLowerCase()
+        }
+        return sReturn
+    }
+
+    MobileElement findMobileElement(By oBy) {
+        return (MobileElement) getAppiumDriver().findElement(oBy)
+    }
+
+    MobileElement findMobileElement(String sObject) {
+        return findMobileElement(sCurrentPage, sObject)
+    }
+
+    MobileElement findMobileElement(String sPage, String sObject) {
+        return (MobileElement) findElement(sPage, sObject)
+    }
+
+    private WebElement searchElement(Object oPage, String sObject) {
+        WebElement oElement = null
+
+        Class<?> aClass = oPage.getClass()
+        Class<?> aSuperClass = aClass.getSuperclass()
+        List<Field> fields = new ArrayList<>()
+        fields.addAll(Arrays.asList(aClass.getDeclaredFields()))
+        fields.addAll(Arrays.asList(aSuperClass.getDeclaredFields()))
+
+        fields.each { field ->
+
+            if (field.getName().equalsIgnoreCase(sObject)) {
+                try {
+                   oElement =  field.get(oPage)
+                } catch (Exception e ) {
+                    logger.error(e.getMessage())
+                }
+            }
+        }
+        return oElement
+    }
+
+    List<WebElement> findElements(By oBy) {
+        return oWebDriver.findElements(oBy)
+    }
+
+    List<WebElement> findElements(String sObject) {
+        return findElements(sCurrentPage, sObject)
+    }
+
+    List<WebElement> findElements(String sPage, String sObject) {
+        return searchElements(getPageInstance(sPage), sObject)
+    }
+
+    List<MobileElement> findMobileElements(By oBy) {
+        return (List<MobileElement>) (List<?>) getAppiumDriver().findElements(oBy)
+    }
+
+    List<MobileElement> findMobileElements(String sObject) {
+        return findMobileElements(sCurrentPage, sObject)
+    }
+
+    List<MobileElement> findMobileElements(String sPage, String sObject) {
+        return (List<MobileElement>) (List<?>) searchElements(getPageInstance(sPage), sObject)
+    }
+
+    private List<WebElement> searchElements(Object oPage, String sObject) {
+        List<WebElement> oElementList = null
+
+        Class<?> aClass = oPage.getClass()
+        Class<?> aSuperClass = aClass.getSuperclass()
+        List<Field> fields = new ArrayList<>()
+        fields.addAll(Arrays.asList(aClass.getDeclaredFields()))
+        fields.addAll(Arrays.asList(aSuperClass.getDeclaredFields()))
+
+        fields.each { field ->
+            if(field.getName().equalsIgnoreCase(sObject)) {
+                try {
+                    oElementList = (List<WebElement>) field.get(oPage)
+                } catch (Exception e) {
+                    logger.error(e.getMessage())
+                }
+            }
+        }
+        return oElementList
+    }
+
+    void addData(String sKey, String sValue) {
+        DataUtil.store(sKey, sValue)
+    }
+
+    void upDateData(String sKey, String sValue) {
+        addData(sKey, sValue)
+    }
+
+    void clearDataByKey(String sKey) {
+        DataUtil.remove(sKey)
+    }
+
+    String getDataByKey(String sKey) {
+        DataUtil.retrieveString(sKey)
+    }
+
+    //TBD
+    String getData(String sActualText) {
+        return CoreUtil.process(sActualText)
+    }
 
 }
