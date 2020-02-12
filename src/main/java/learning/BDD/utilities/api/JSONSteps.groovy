@@ -1,10 +1,14 @@
 package learning.BDD.utilities.api
 
+import com.fasterxml.jackson.databind.node.JsonNodeType
 import cucumber.api.DataTable
 import cucumber.api.java.en.Given
 import learning.BDD.utilities.Context
 import org.apache.commons.lang3.BooleanUtils
+import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.math.NumberUtils
+import org.testng.Assert
+import org.testng.annotations.Optional
 
 import static org.hamcrest.Matchers.*
 
@@ -162,20 +166,101 @@ class JSONSteps {
         }
     }
 
+    @Given("^I verify API JSON Array \"(.*)\" is sorted (ascending|descending)\$")
+    void verifyJsonArraySorting(String sQuery, String sortingOrder) {
+        try {
+            sQuery = Context.getInstance().getData(sQuery)
+            List<Object> actualArray = getJsonArray(sQuery)
+            if ((actualArray.size() > 0) && (!(actualArray.get(0) instanceof HashMap))) {
+                Assert.assertTrue(validateJsonArray((ArrayList) actualArray), sortingOrder, "")
+            }
+        } catch (AssertionError e) {
+            Context.getInstance().getReports().stepFail(e.getMessage())
+        }
+    }
 
+    @Given("^I verify API JSON Array \"(.*)\" contains only \"(.*)\"\$")
+    void verifyJsonArrayUnique(String sQuery, String sUnique) {
+        try {
+            sQuery = Context.getInstance().getData(sQuery)
+            List<Object> actualArray = getJsonArray(sQuery)
+            if(actualArray.size()>0) {
+                Assert.assertTrue(validateJsonArray((ArrayList) actualArray), "checkUnique", sUnique)
+            }
+        } catch (AssertionError e) {
+            Context.getInstance().getReports().stepFail(e.getMessage())
+        }
+    }
 
+    @Given("^I store API Json Object \"(.*)\" to \"(.*)\"\$")
+    void storeJsonObject(String sQuery, String sMapKey) {
+        sQuery = Context.getInstance().getData(sQuery)
+        String sMapValue = Context.getInstance().getValidatableResponse().extract().body().jsonPath().get(sQuery).toString()
+        Context.getInstance().addData(sMapKey, sMapValue)
+    }
 
+    static JsonNodeType getJsonNodeType(String sValue) {
+        if(sValue == null || sValue.equalsIgnoreCase("NULL")) {
+            return JsonNodeType.NULL
+        } else if ((sValue.startsWith("\"") && sValue.endsWith("\"")) || (sValue.startsWith("\'") && sValue.endsWith("\'"))) {
+            return JsonNodeType.STRING
+        } else if ((BooleanUtils.toBooleanObject(sValue) == Boolean.TRUE) || (BooleanUtils.toBooleanObject(sValue) == Boolean.FALSE)) {
+            return JsonNodeType.BOOLEAN
+        } else if (StringUtils.isNumeric(sValue)) {
+            return JsonNodeType.NUMBER
+        } else {
+            return JsonNodeType.STRING
+        }
+    }
 
+    //This method will return any data based on Gpath. If query did not match it will return empty array
+    static <T> List<T> getJsonArray(String sQuery) {
+        sQuery = Context.getInstance().getData(sQuery)
+        return Context.getInstance().getResponse().jsonPath().getList(sQuery)
+    }
 
+    //This method will act on String Array List
+    boolean validateJsonArray(ArrayList<String> list, String sOperation, @Optional String sValue) {
+        boolean result = false
+        ArrayList<String> actualList = new ArrayList<>()
+        switch (sOperation) {
+            case ("ascending"):
+                actualList = list
+                Collections.sort(actualList)
+                result = actualList.equals(list)
+                break
+            case ("descending"):
+                actualList = list
+                Collections.sort(actualList)
+                Collections.reverse(actualList)
+                result = actualList.equals(list)
+                break
+            case ("checkUnique"):
+                actualList = list
+                actualList.removeAll(sValue)
+                result = actualList.isEmpty()
+                break
+        }
+        return result
+    }
 
-
-
-
-
-
-
-
-
-
-
+    static Object getJsonType(String value, String type) {
+        switch (type.toUpperCase()) {
+            case "INT":
+            case "INTEGER":
+                return Integer.parseInt(value)
+            case "LONG":
+                return Long.parseLong(value)
+            case "FLOAT":
+                return Float.parseFloat(value)
+            case "DOUBLE":
+                return Double.parseDouble(value)
+            case "BOOLEAN":
+                return Boolean.parseBoolean(value)
+            case "NULL":
+                return null
+            default:
+                return value
+        }
+    }
 }
