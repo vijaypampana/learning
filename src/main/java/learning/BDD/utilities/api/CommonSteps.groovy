@@ -10,7 +10,7 @@ import groovy.xml.XmlUtil
 import io.restassured.RestAssured
 import io.restassured.response.Response
 import learning.BDD.utilities.Context
-import learning.BDD.utilities.DataUtil
+import learning.BDD.utilities.util.DataUtil
 import learning.BDD.utilities.transformer.TransformTextUsingYAML
 import org.xml.sax.SAXException
 

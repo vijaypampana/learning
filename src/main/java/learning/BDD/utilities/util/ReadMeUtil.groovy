@@ -1,4 +1,4 @@
-package learning.BDD.utilities
+package learning.BDD.utilities.util
 
 import cucumber.runtime.io.FileResourceLoader
 import cucumber.runtime.model.CucumberFeature

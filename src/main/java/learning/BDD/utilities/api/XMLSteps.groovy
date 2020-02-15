@@ -3,7 +3,7 @@ package learning.BDD.utilities.api
 import cucumber.api.DataTable
 import cucumber.api.java.en.Given
 import learning.BDD.utilities.Context
-import learning.BDD.utilities.DataUtil
+import learning.BDD.utilities.util.DataUtil
 import org.apache.commons.lang3.BooleanUtils
 
 import static org.hamcrest.Matchers.*

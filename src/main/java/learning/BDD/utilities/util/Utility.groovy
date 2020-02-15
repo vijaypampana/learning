@@ -1,4 +1,4 @@
-package learning.BDD.utilities
+package learning.BDD.utilities.util
 
 class Utility {
 

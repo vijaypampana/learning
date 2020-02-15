@@ -15,6 +15,8 @@ import io.appium.java_client.remote.AndroidMobileCapabilityType
 import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
 import learning.BDD.utilities.reports.ReportDriver
+import learning.BDD.utilities.util.DataUtil
+import learning.BDD.utilities.util.Utility
 import learning.BDD.utilities.utilEnum.BrowserType
 import learning.BDD.utilities.utilEnum.WebDriverType
 import org.apache.commons.lang3.StringUtils
@@ -145,7 +147,7 @@ class Context extends APIContext {
     //This method will start browser Stack tunnel
     private void startBrowserStackTunnel(String key) {
         bsLocal = new Local()
-        bsLocalIdentifier = learning.BDD.utilities.Utility.router("[ALPHANUMERIC~~15~~Random]")
+        bsLocalIdentifier = Utility.router("[ALPHANUMERIC~~15~~Random]")
 
         try {
             HashMap<String, String> bsLocalArgs = new HashMap<>()
