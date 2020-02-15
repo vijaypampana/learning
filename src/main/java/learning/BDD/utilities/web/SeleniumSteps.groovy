@@ -1,27 +1,35 @@
 package learning.BDD.utilities.web
 
+import cucumber.api.DataTable
 import cucumber.api.Transform
 import cucumber.api.java.en.Given
-import cucumber.api.java8.Ar
 import learning.BDD.utilities.Context
 import learning.BDD.utilities.transformer.TransformTextUsingYAML
 import learning.BDD.utilities.transformer.TransformToAssert
 import learning.BDD.utilities.transformer.TransformToCssColor
 import learning.BDD.utilities.transformer.TransformToWebElement
 import learning.BDD.utilities.transformer.TransformToWebElements
+import learning.BDD.utilities.utilEnum.CssProperty
+import learning.BDD.utilities.utilEnum.Position
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.safety.Whitelist
+import org.jsoup.select.Elements
 import org.openqa.selenium.By
+import org.openqa.selenium.Dimension
 import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.Point
 import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
-import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.interactions.Action
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.FluentWait
 import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.testng.Assert
 
-import java.lang.annotation.ElementType
 import java.time.Duration
 import java.util.concurrent.TimeoutException
 
@@ -393,26 +401,218 @@ class SeleniumSteps {
     //UI Validation
     @Given("^I verify \"(.*)\" text color is \"(.*)\"\$")
     void verifyElementTextColor(@Transform(TransformToWebElement.class) WebElement webElement, @Transform(TransformToCssColor.class) String sColor) {
-        verifyElementCssValue(webElement, )
+        verifyElementCssValue(webElement, CssProperty.COLOR.getProperty(), sColor)
     }
 
+    @Given("^I verify \"(.*)\" background color is \"(.*)\"\$")
+    void verifyElementBackgroundColor(@Transform(TransformToWebElement.class) WebElement webElement, @Transform(TransformToCssColor.class) String sColor) {
+        verifyElementCssValue(webElement, CssProperty.BACKGROUND_COLOR.getProperty(), sColor)
+    }
 
+    @Given("^I verify \"(.*)\" font size is \"(.*)\"\$")
+    void verifyElementFontSize(@Transform(TransformToWebElement.class) WebElement webElement, String sSize) {
+        verifyElementCssValue(webElement, CssProperty.FONT_SIZE.getProperty(), sSize)
+    }
 
+    @Given("^I verify \"(.*)\" text is align \"(.*)\"\$")
+    void verifyElementTextAlignment(@Transform(TransformToWebElement.class) WebElement webElement, String sAlignment) {
+        verifyElementCssValue(webElement, CssProperty.TEXT_ALIGN.getProperty(), sAlignment)
+    }
 
+    @Given("^I verify \"(.*)\" has CSS property \"(.*)\" with value \"(.*)\"\$")
+    void verifyElementCssValue(@Transform(TransformToWebElement.class) WebElement webElement, String sProperty, String sExpectedValue) {
+        String sActualValue = webElement.getCssValue(sProperty)
+        if(!sActualValue.equalsIgnoreCase(sExpectedValue)) {
+            Context.getInstance().getReports().stepFail("Css property did not match")
+        }
+    }
 
+    //Position Validations
+    @Given("^I verify \"(.*)\" is displayed anywhere left of \"(.*)\"\$")
+    void verifyElementPositionLeft(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.LEFT)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed exactly left of \"(.*)\"\$")
+    void verifyElementPositionExactlyLeft(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.EXACTLY_LEFT)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed anywhere right of \"(.*)\"\$")
+    void verifyElementPositionRight(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.RIGHT)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed exactly right of \"(.*)\"\$")
+    void verifyElementPositionExactlyRight(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.EXACTLY_RIGHT)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed anywhere above of \"(.*)\"\$")
+    void verifyElementPositionTop(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.TOP)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed exactly above of \"(.*)\"\$")
+    void verifyElementPositionExactlyTop(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.EXACTLY_TOP)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed anywhere below of \"(.*)\"\$")
+    void verifyElementPositionBottom(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.BOTTOM)
+    }
 
+    @Given("^I verify \"(.*)\" is displayed exactly below of \"(.*)\"\$")
+    void verifyElementPositionExactlyBottom(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.EXACTLY_BOTTOM)
+    }
 
+    @Given("I verify \"(.*)\" is displayed inside \"(.*)\"")
+    void verifyElementPositionInside(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        Point pointOne = webElementOne.getLocation()
+        Point pointTwo = webElementTwo.getLocation()
 
+        Dimension dimensionOne = webElementOne.getSize()
+        Dimension dimensionTwo = webElementTwo.getSize()
 
+        if((pointOne.getX() >= pointTwo.getX()) &&
+                (pointOne.getX() + dimensionOne.getWidth() <= pointTwo.getX() + dimensionTwo.getWidth()) &&
+                (pointOne.getY() >= pointTwo.getY()) &&
+                (pointOne.getY() + dimensionOne.getHeight() <= pointTwo.getY() + dimensionTwo.getWidth())
+            ) {
+        } else {
+            Context.getInstance().getReports().stepFail()
+        }
+    }
 
+    @Given("^I verify \"(.*)\" is displayed outside \"(.*)\"\$")
+    void verifyElementPositionOutside(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
+        Point pointOne = webElementOne.getLocation()
+        Point pointTwo = webElementTwo.getLocation()
 
+        Dimension dimensionOne = webElementOne.getSize()
+        Dimension dimensionTwo = webElementTwo.getSize()
 
+        if((pointOne.getX() > pointTwo.getX() || pointOne.getX() < pointTwo.getX()) &&
+                (pointOne.getX() + dimensionOne.getWidth() > pointTwo.getX() + dimensionTwo.getWidth() || pointOne.getX() + dimensionOne.getWidth() < pointTwo.getX() + dimensionTwo.getWidth()) &&
+                (pointOne.getY() > pointTwo.getY() || pointOne.getY() < pointTwo.getY()) &&
+                (pointOne.getY() + dimensionOne.getHeight() > pointTwo.getY() + dimensionTwo.getHeight() || pointOne.getY() + dimensionOne.getHeight() < pointTwo.getY() + dimensionTwo.getHeight())
+        ) {
 
+        } else {
+            Context.getInstance().getReports().stepFail()
+        }
+    }
 
+    //Pointtwo is reference and we are searching for point one location
+    private void verifyElementPosition(Point pointOne, Point pointTwo, Position direction) {
+        boolean bVerify = false
+
+        switch (direction) {
+            case "RIGHT":
+                bVerify = pointOne.getX() > pointTwo.getX()
+                break
+            case "EXACTLY_RIGHT":
+                bVerify = pointOne.getX() > pointTwo.getX()  && pointOne.getY() == pointTwo.getY()
+                break
+            case "LEFT":
+                bVerify = pointOne.getX() < pointTwo.getX()
+                break
+            case "EXACTLY_LEFT":
+                bVerify = pointOne.getX() < pointTwo.getX()  && pointOne.getY() == pointTwo.getY()
+                break
+            case "TOP":
+                bVerify = pointOne.getY() < pointTwo.getY()
+                break
+            case "EXACTLY_TOP":
+                bVerify = pointOne.getY() < pointTwo.getY()  && pointOne.getX() == pointTwo.getX()
+                break
+            case "BOTTOM":
+                bVerify = pointOne.getY() > pointTwo.getY()
+                break
+            case "EXACTLY_BOTTOM":
+                bVerify = pointOne.getY() > pointTwo.getY()  && pointOne.getX() == pointTwo.getX()
+                break
+        }
+
+        if(!bVerify) {
+            Context.getInstance().getReports().stepFail("")
+        }
+
+    }
+
+    @Given("^I mousehover on \"(.*)\"\$")
+    void mouseHover(@Transform(TransformToWebElement.class) WebElement webElement) {
+        Actions actions = new Actions(oDriver)
+        actions.moveToElement(webElement).build().perform()
+    }
+
+    @Given("^I move \"(.*)\" slider horizontally to \\d+ percent\$")
+    void moveSliderHorizontally(@Transform(TransformToWebElement.class) WebElement webElement, int iPercentage) {
+        Actions actions = new Actions(oDriver)
+        actions.moveToElement(webElement, (webElement.getSize().getWidth() * iPercentage) / 100, 0).click().build().perform()
+    }
+
+    @Given("^I move \"(.*)\" slider vertically to \\d+ percent\$")
+    void moveSliderVertically(@Transform(TransformToWebElement.class) WebElement webElement, int iPercentage) {
+        Actions actions = new Actions(oDriver)
+        actions.moveToElement(webElement, 0, (webElement.getSize().getHeight() * iPercentage) / 100).click().build().perform()
+    }
+
+    @Given("I validate \"(.*)\" table using below values")
+    void validateTableData(@Transform(TransformToWebElement.class) WebElement webTable, DataTable table) {
+        try {
+            if(element_displayed(true, webTable)) {
+                Assert.assertEquals(processWebTable(webTable).body().html(), frameExpectedTable(table).body().html())
+            } else {
+                Context.getInstance().getReports().stepFail("Table is not displayed")
+            }
+        } catch (Exception e) {
+            Context.getInstance().getReports().stepFail("Table Validation failed : " + e.getMessage())
+        }
+    }
+
+    private Document processWebTable(WebElement webTable) {
+        Document doc = Jsoup.parse(
+                Jsoup.clean(webTable.getAttribute("outerHTML").replace("&nbsp;", ""),
+                                new Whitelist().addTags("table", "tbody", "td", "tfoot", "th", "thead", "tr")))
+        doc.outputSettings().indentAmount(0).prettyPrint(false)
+        trimHTMLnodeValue(doc, "td")
+        trimHTMLnodeValue(doc, "th")
+        return doc
+    }
+
+    private Document frameExpectedTable(DataTable table) {
+        String sExpRow = "", sExpectedHeader = "", sExpectedColumn = "", sExpBody = "", sExpectedTable = ""
+        table.raw().each { row ->
+            row.each { data ->
+                if(!Context.getInstance().getData(data).isEmpty()) {
+                    if(Context.getInstance().getData(data).equalsIgnoreCase("header")) {
+                        sExpectedHeader += "<th>" + Context.getInstance().getData(data) + "</th>"
+                    } else {
+                        sExpectedColumn += "<td>" + Context.getInstance().getData(data) + "</td>"
+                    }
+                }
+            }
+            sExpRow += (!sExpectedColumn.isEmpty()) ? "<tr>" + sExpectedColumn + "</tr>" : ""
+            sExpectedColumn = ""
+        }
+        sExpectedHeader = (!sExpectedHeader.isEmpty()) ? "<thead>" + sExpectedHeader + "</thead>" : ""
+        sExpBody = (!sExpRow.isEmpty()) ? "<tbody>" + sExpRow + "</tbody>" : ""
+        sExpectedTable = "<table>" + sExpectedHeader + sExpBody + "</table>"
+        return Jsoup.parse(sExpectedTable)
+    }
+
+    private void trimHTMLnodeValue(Document doc, String tagName) {
+        Elements tags = doc.select(tagName)
+        tags.each { tag ->
+            tag.textNodes().each { node ->
+                String tagText = node.text().trim()
+                if(tagText.trim().length() > 0) {
+                    node.text(tagText)
+                }
+            }
+        }
+    }
 }
