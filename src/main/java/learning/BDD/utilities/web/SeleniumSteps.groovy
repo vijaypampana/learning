@@ -467,7 +467,7 @@ class SeleniumSteps {
         verifyElementPosition(webElementOne.getLocation(), webElementTwo.getLocation(), Position.EXACTLY_BOTTOM)
     }
 
-    @Given("I verify \"(.*)\" is displayed inside \"(.*)\"")
+    @Given("^I verify \"(.*)\" is displayed inside \"(.*)\"\$")
     void verifyElementPositionInside(@Transform(TransformToWebElement.class) WebElement webElementOne, @Transform(TransformToWebElement.class) WebElement webElementTwo) {
         Point pointOne = webElementOne.getLocation()
         Point pointTwo = webElementTwo.getLocation()
@@ -559,7 +559,7 @@ class SeleniumSteps {
         actions.moveToElement(webElement, 0, (webElement.getSize().getHeight() * iPercentage) / 100).click().build().perform()
     }
 
-    @Given("I validate \"(.*)\" table using below values")
+    @Given("^I validate \"(.*)\" table using below values\$")
     void validateTableData(@Transform(TransformToWebElement.class) WebElement webTable, DataTable table) {
         try {
             if(element_displayed(true, webTable)) {

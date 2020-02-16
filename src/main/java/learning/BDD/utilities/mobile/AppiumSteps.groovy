@@ -4,12 +4,19 @@ import cucumber.api.Transform
 import cucumber.api.java.en.Given
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
+import io.appium.java_client.ios.IOSDriver
 import learning.BDD.utilities.Context
+import learning.BDD.utilities.transformer.TransformTextByOS
 import learning.BDD.utilities.transformer.TransformTextUsingYAML
 import learning.BDD.utilities.transformer.TransformToAssert
 import learning.BDD.utilities.transformer.TransformToMobileElement
+import learning.BDD.utilities.transformer.TransformToMobileElements
+import learning.BDD.utilities.utilEnum.XpathFormatter
+import org.openqa.selenium.By
+import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.testng.Assert
+import sun.security.util.PendingException
 
 class AppiumSteps {
 
@@ -45,7 +52,7 @@ class AppiumSteps {
         mobileElement.sendKeys(sText)
     }
 
-    @Given("I clear & set \"(.*)\" as \"(.*)\"")
+    @Given("^I clear & set \"(.*)\" as \"(.*)\"\$")
     void clear_and_set_value(@Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sValue) {
         mobileElement.clear()
         mobileElement.setValue(sValue)
@@ -81,12 +88,243 @@ class AppiumSteps {
         }
     }
 
+    @Given("^I verify \"(.*)\" is enabled\$")
+    void verify_element_enabled(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        Assert.assertTrue(mobileElement.isEnabled())
+    }
 
+    @Given("^I verify \"(.*)\" is disabled\$")
+    void verify_element_disabled(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        Assert.assertFalse(mobileElement.isEnabled())
+    }
 
+    @Given("^I verify \"(.*)\" is selected\$")
+    void verify_selected(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        Assert.assertTrue(mobileElement.isSelected())
+    }
 
+    @Given("^I verify \"(.*)\" is not selected\$")
+    void verify_not_selected(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        Assert.assertFalse(mobileElement.isSelected())
+    }
 
+    @Given("^I (verify | assert) \"(.*)\" has \"(.*)\" attribute as \"(.*)\"\$")
+    void verify_object_property(@Transform(TransformToAssert.class) Boolean bAssert, @Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextByOS.class) String sAttribute,
+                                @Transform(TransformTextUsingYAML.class) String sExpectedText) {
+        try {
+            Assert.assertEquals(mobileElement.getAttribute(sAttribute), sExpectedText )
+        } catch (AssertionError e) {
+            if(bAssert) {
+                Context.getInstance().getReports().stepFail("")
+            } else {
+                Context.getInstance().getReports().stepError("")
+            }
+        }
+    }
 
+    @Given("^I (verify | assert) \"(.*)\" is displayed as \"(.*)\"\$")
+    void verify_object_text(@Transform(TransformToAssert.class) Boolean bAssert, @Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sExpectedText) {
+        String sActualText = "", sAttribute = "text"
+        if(oDriver instanceof IOSDriver) {
+            List<String> typeThatUseValue = Arrays.asList("XCUIElementTypeTextField", "XCUIElementTypeSecureTextField", "XCUIElementTypePickerWheel")
+            if(typeThatUseValue.contains(mobileElement.getAttribute("type"))) {
+                sAttribute = "value"
+            } else {
+                sAttribute = "label"
+            }
+        }
 
+        sActualText = mobileElement.getAttribute(sAttribute)
+        try {
+            Assert.assertEquals(sExpectedText, sActualText == null ? "" : sActualText)
+        } catch (AssertionError e) {
+            if(bAssert) {
+                Context.getInstance().getReports().stepFail("")
+            } else {
+                Context.getInstance().getReports().stepError(e.getMessage())
+            }
+        }
+    }
+
+    @Given("^I (verify | assert) \"(.*)\" at position (\\d+) is displayed as \"(.*)\"\$")
+    void verify_object_text(@Transform(TransformToAssert.class) Boolean bAssert, @Transform(TransformToMobileElements.class) List<MobileElement> mobileElements, Integer i, @Transform(TransformTextUsingYAML.class) String sExpectedText) {
+        verify_object_text(bAssert, mobileElements.get(i - 1), sExpectedText)
+    }
+
+    @Given("^I (verify | assert) \"(.*)\" at position (\\d+) is NOT displayed\$")
+    void verify_object_not_displayed(@Transform(TransformToAssert.class) Boolean bAssert, @Transform(TransformToMobileElements.class) List<MobileElement> mobileElements, Integer i) {
+        try {
+            mobileElements.get(i - 1)
+            Context.getInstance().getReports().stepFail("Element is still displayed")
+        } catch (IndexOutOfBoundsException e) {
+        }
+    }
+
+    @Given("^I click \"(.*)\" at position (\\d+)\$")
+    void clickObjectUsingIndex(@Transform(TransformToMobileElements.class) List<MobileElement> mobileElements, int i) {
+        mobileElements.get(i - 1).click()
+    }
+
+    //Generic Verifications
+    @Given("^I verify \"(.*)\" button is displayed\$")
+    void verify_button_with_label(@Transform(TransformTextUsingYAML.class) String sValue) {
+        verify_element_with_type_and_text("button", "label", sValue, true)
+    }
+
+    @Given("^I verify \"(.*)\" button is NOT displayed\$")
+    void verify_button_with_label_negative(@Transform(TransformTextUsingYAML.class) String sValue) {
+        verify_element_with_type_and_text("button", "label", sValue, false)
+    }
+
+    @Given("^I verify \"(.*)\" text is displayed\$")
+    void verify_text_with_label(@Transform(TransformTextUsingYAML.class) String sValue) {
+        verify_element_with_type_and_text("text", "label", sValue, true)
+    }
+
+    @Given("^I verify \"(.*)\" text is NOT displayed\$")
+    void verify_text_with_label_negative(@Transform(TransformTextUsingYAML.class) String sValue) {
+        verify_element_with_type_and_text("text", "label", sValue, false)
+    }
+
+    @Given("^I verify text contains \"(.*)\" is displayed\$")
+    void verify_contains_text_with_label(String sValue) {
+        verify_element_with_type_and_text("containstext", "label", sValue, true)
+    }
+
+    @Given("^I verify text contains \"(.*)\" is NOT displayed\$")
+    void verify_contains_text_with_label_negative(String sValue) {
+        verify_element_with_type_and_text("containstext", "label", sValue, false)
+    }
+
+    void verify_element_with_type_and_text(String sElementType, String sAttribute, String sValue, Boolean bDisplayFlag) {
+        try {
+            String sxPath = ""
+            switch (sElementType + "-" + sAttribute) {
+                case "button-label":
+                    sxPath = XpathFormatter.LABELVALIDATIONFORMATTER.BUTTONEQUALS.getXpath(sValue)
+                    break
+                case "text-label":
+                    sxPath = XpathFormatter.LABELVALIDATIONFORMATTER.TEXTEQUALS.getXpath(sValue)
+                    break
+                case "containstext-label":
+                    sxPath = XpathFormatter.LABELVALIDATIONFORMATTER.TEXTCONTAINS.getXpath(sValue)
+                    break
+                default:
+                    throw new IllegalArgumentException("Switch case arguments for verify_element_with_type_and_text method fails")
+            }
+
+            MobileElement oElement = (MobileElement) oWebDriverWait.until(ExpectedConditions.visibilityOf(Context.getInstance().findMobileElement(By.xpath(sxPath))))
+
+            if(bDisplayFlag) {
+                Assert.assertTrue(oElement.isDisplayed())
+            } else {
+                Assert.assertFalse(oElement.isDisplayed())
+            }
+        } catch (Exception e) {
+            Context.getInstance().getReports().stepFail(e.getMessage())
+        }
+    }
+
+    //Methods for Typing or KeyBoard Operations
+    @Given("^I type test as \"(.*)\"\$")
+    void type_text(@Transform(TransformTextUsingYAML.class) String sText) {
+        oDriver.getKeyboard().sendKeys(sText)
+    }
+
+    @Given("^I type \"(.*)\" in \"(.*)\"\$")
+    void type_text_on_element(@Transform(TransformTextUsingYAML.class) String sText, @Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        mobileElement.click()
+        type_text(sText)
+    }
+
+    @Given("^I type text as \"(.*)\" one character at a time\$")
+    void type_text_one_character_at_a_time(@Transform(TransformTextUsingYAML.class) String sText) {
+        for(int i=0; i < sText.length(); i++) {
+            oDriver.getKeyboard().sendKeys(Character.toString(sText.charAt(i)))
+        }
+    }
+
+    @Given("^I type \"(.*)\" in \"(.*)\" one character at a time\$")
+    void type_text_on_element_one_character_at_a_time(@Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sText) {
+        mobileElement.click()
+        type_text_one_character_at_a_time(sText)
+    }
+
+    //TBD
+    @Given("^I press \"(.*)\" key\$")
+    void press_key_sequence(String sKeySequence) throws Throwable {
+        throw new PendingException()
+    }
+
+    //Switching Context NATIVE, WEB, VISUAL
+    private void switch_context(String sContext) {
+        oDriver.context(sContext)
+    }
+
+    @Given("^I switch context to NATIVE\$")
+    void switch_context_to_native() {
+        switch_context("NATIVE_APP")
+    }
+
+    @Given("^I switch context to WEB\$")
+    void switch_context_to_WEB() {
+        switch_context("WEBVIEW_1")
+    }
+
+    @Given("^I switch context to WEB (\\d+)\$")
+    void switch_context_to_web(Integer i) {
+        switch_context("WEBVIEW_" + i)
+    }
+
+    //TBD
+    @Given("^I switch context to VISUAL\$")
+    void switch_context_to_visual() throws Throwable {
+        throw new PendingException()
+    }
+
+    //APP Operations
+    @Given("^I launch application\$")
+    void launch_app() {
+        oDriver.launchApp()
+    }
+
+    @Given("^I close application\$")
+    void close_app() {
+        oDriver.closeApp()
+    }
+
+    @Given("^I relaunch application\$")
+    void relaunch_app() {
+        oDriver.closeApp()
+        oDriver.launchApp()
+    }
+
+    @Given("^I clean application\$")
+    void clean_app() {
+        oDriver.resetApp()
+    }
+
+    @Given("^I install \"(.*)\" application\$")
+    void install_app(@Transform(TransformTextByOS.class) String sPath) {
+        oDriver.installApp(sPath)
+    }
+
+    //TBD
+    @Given("^I install \"(.*)\" application instrumented\$")
+    void install_app_instrumented(String sAppName) {
+
+    }
+
+    @Given("^I uninstall \"(.*)\" application\$")
+    void uninstall_app(String sBundleId) {
+        oDriver.removeApp(sBundleId)
+    }
+
+    //TBD
+    @Given("^I reset all application\$")
+    void reset_apps() {
+        //
+    }
 
 
 
