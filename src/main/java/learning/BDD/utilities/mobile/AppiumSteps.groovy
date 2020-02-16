@@ -4,7 +4,14 @@ import cucumber.api.Transform
 import cucumber.api.java.en.Given
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
+import io.appium.java_client.TouchAction
+import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.android.nativekey.AndroidKey
+import io.appium.java_client.android.nativekey.KeyEvent
 import io.appium.java_client.ios.IOSDriver
+import io.appium.java_client.touch.WaitOptions
+import io.appium.java_client.touch.offset.ElementOption
+import io.appium.java_client.touch.offset.PointOption
 import learning.BDD.utilities.Context
 import learning.BDD.utilities.transformer.TransformTextByOS
 import learning.BDD.utilities.transformer.TransformTextUsingYAML
@@ -13,10 +20,14 @@ import learning.BDD.utilities.transformer.TransformToMobileElement
 import learning.BDD.utilities.transformer.TransformToMobileElements
 import learning.BDD.utilities.utilEnum.XpathFormatter
 import org.openqa.selenium.By
+import org.openqa.selenium.Dimension
+import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.testng.Assert
 import sun.security.util.PendingException
+
+import java.time.Duration
 
 class AppiumSteps {
 
@@ -324,6 +335,180 @@ class AppiumSteps {
     @Given("^I reset all application\$")
     void reset_apps() {
         //
+    }
+
+    //TBD
+    @Given("^I launch \"(.*)\" application\$")
+    void launch_app(String sAppName) {
+
+    }
+
+    //TBD
+    @Given("^I close \"(.*)\" application\$")
+    void close_app(String sAppName) {
+
+    }
+
+    //TBD
+    @Given("^I relaunch \"(.*)\" application\$")
+    void relaunch_app(String sAppName) {
+
+    }
+
+    //TBD
+    @Given("^I clean \"(.*)\" application\$")
+    void clean_app(String sAppName) {
+
+    }
+
+    //Device Operations
+    @Given("^I press home button\$")
+    void home() {
+        if(!Context.getInstance().isbIOS()) {
+            oDriver.getKeyboard().pressKey(new KeyEvent(AndroidKey.HOME))
+        } else {
+            oDriver.executeScript("mobile: pressButton", ImmutableMap.of("name", "home"))
+        }
+    }
+
+    //TBD
+    @Given("^I close device\$")
+    void close_device() {
+
+    }
+
+    @Given("^I rotate device\$")
+    void rotate_device() {
+        if(oDriver.getOrientation().equals(ScreenOrientation.PORTRAIT)) {
+            oDriver.rotate(ScreenOrientation.LANDSCAPE)
+        } else {
+            oDriver.rotate(ScreenOrientation.PORTRAIT)
+        }
+    }
+
+    //Key Board Operations
+    @Given("^I hide keyboard\$")
+    void hide_keyboard() {
+        if(oDriver instanceof AndroidDriver) {
+            oDriver.hideKeyboard()
+        } else {
+            try {
+                oDriver.findElement(By.xpath("//XCUIElementTypeOther//XCUIElementTypeButton[@label=\"Done\"]")).click()
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    //Swipe
+    void swipeByPercentage(int iX1, int iY1, int iX2, int iY2) {
+        Dimension size = oDriver.manage().window().getSize()
+        iX1 = (size.width * iX1) / 100
+        iY1 = (size.height * iY1) / 100
+        iX2 = (size.width * iX2) / 100
+        iY2 = (size.height * iY2) / 100
+
+        if(oDriver instanceof AndroidDriver) {
+            swipe(iX1, iY1, iX2, iY2)
+        } else {
+            swipe(iX1, iY1, iX2 - iX1, iY2 - iY1)
+        }
+    }
+
+    void swipe(int iStartX, int iStartY, int iEndX, int iEndY) {
+        TouchAction oAction = new TouchAction(oDriver)
+            .press(PointOption.point(iStartX, iStartY))
+            .waitAction(WaitOptions.waitOptions(Duration.ofSeconds(3)))
+            .moveTo(PointOption.point(iEndX, iEndY))
+            .release()
+        oAction.perform()
+    }
+
+    void swipe(MobileElement oStart, MobileElement oEnd) {
+        TouchAction oAction = new TouchAction(oDriver)
+        if(oDriver instanceof AndroidDriver) {
+            oAction.longPress(ElementOption.element(oStart)).moveTo(ElementOption.element(oEnd)).release()
+        } else {
+            oAction.press(ElementOption.element(oStart)).moveTo(ElementOption.element(oEnd)).release()
+        }
+        oDriver.performTouchAction(oAction)
+    }
+
+    @Given("^I swipe until \"(.*)\" element visible\$")
+    void swipe_until_element_visible(String sObject) {
+        Boolean bVisible = false
+        int i = 0
+        while((!bVisible) && (i <= 5)) {
+            i++
+            try {
+                Context.getInstance().findMobileElement(sObject).isDisplayed()
+                bVisible = true
+            } catch (Exception e) {
+                swipeByPercentage(50, 60, 50, 40)
+            }
+        }
+    }
+
+    @Given("^I swipe until \"(.*)\" text visible\$")
+    void swipe_until_text_visible(String sObject) {
+        Boolean bVisible = false
+        int i = 0
+        String sXpath = XpathFormatter.LABELVALIDATIONFORMATTER.TEXTCONTAINS.getXpath(sObject)
+        while((!bVisible) && (i <= 5)) {
+            i++
+            try {
+                Context.getInstance().getWebDriverShortWait().until(ExpectedConditions.visibilityOf(Context.getInstance().findMobileElement(By.xpath(sXpath)))).isDisplayed()
+                bVisible = true
+            } catch (Exception e) {
+                swipeByPercentage(50, 60, 50, 40)
+            }
+        }
+    }
+
+    @Given("^I swipe up\$")
+    void swipe_up() {
+        if(oDriver instanceof AndroidDriver) {
+            swipe(50, 80, 50, 20)
+        } else {
+            swipe(50, 80, 0, -60)
+        }
+    }
+
+    @Given("^I swipe down\$")
+    void swipe_down() {
+        if(oDriver instanceof AndroidDriver) {
+            swipe(50, 20, 50, 80)
+        } else {
+            swipe(50, 20, 0, 60)
+        }
+    }
+
+    @Given("^I swipe left\$")
+    void swipe_left() {
+        if(oDriver instanceof AndroidDriver) {
+            swipe(80, 50, 20, 50)
+        } else {
+            swipe(80, 50, -60, 0)
+        }
+    }
+
+    @Given("^I swipe right\$")
+    void swipe_right() {
+        if(oDriver instanceof AndroidDriver) {
+            swipe(20, 50, 80, 50)
+        } else {
+            swipe(20, 50, 60, 0)
+        }
+    }
+
+    @Given("^I select \"(.*)\" from the drop down\$")
+    void select_list_from_drop_down(@Transform(TransformTextUsingYAML.class) String sValue) {
+        if(oDriver instanceof IOSDriver) {
+            Context.getInstance().findMobileElement(By.xpath("//XCUIElementTypePickerWheel")).sendKeys(sValue)
+            Context.getInstance().findMobileElement(By.xpath("//XCUIElementTypeButton[@label=\"Done\"]")).click()
+        } else {
+            Context.getInstance().findMobileElement(By.xpath("//android.widget.CheckedTextView[@text=\"$sValue\"]")).click()
+        }
     }
 
 
