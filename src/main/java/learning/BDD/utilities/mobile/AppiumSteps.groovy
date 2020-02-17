@@ -511,6 +511,98 @@ class AppiumSteps {
         }
     }
 
+    //Methods for TAP or CLICK Options
+    @Given("^I tap on \"(.*)\"\$")
+    void click(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        mobileElement.click()
+    }
+
+    private void tap_by_percentage(int x, int y) {
+        try {
+            TouchAction oAction = new TouchAction(oDriver)
+            Dimension size = oDriver.manage().window().getSize()
+            x = (size.width * x) / 100
+            y = (size.height * y) / 100
+            oAction.tap(PointOption.point(x, y))
+            oAction.perform()
+        } catch (Exception e) {
+        }
+    }
+
+    @Given("^I long press on \"(.*)\"\$")
+    void long_press_on_element(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        TouchAction oAction = new TouchAction(oDriver)
+        oAction.longPress(ElementOption.element(mobileElement))
+        oAction.waitAction(WaitOptions.waitOptions(Duration.ofSeconds(3)))
+        oAction.perform()
+    }
+
+    //Generic Tap Methods
+    @Given("^I tap on \"(.*)\" button\$")
+    void click_on_button_with_text(@Transform(TransformTextUsingYAML.class) String sValue) {
+        click_element_with_type_and_text("button", "label", sValue)
+    }
+
+    @Given("^I tap on \"(.*)\" text\$")
+    void click_on_element_with_text(@Transform(TransformTextUsingYAML.class) String sValue) {
+        click_element_with_type_and_text("text", "label", sValue)
+    }
+
+    @Given("^I tap on \"(.*)\" contains text\$")
+    void click_on_element_contains_text(@Transform(TransformTextUsingYAML.class) String sValue) {
+        click_element_with_type_and_text("containstext", "label", sValue)
+    }
+
+    @Given("^I verify \"(.*)\" contains text as \"(.*)\"\$")
+    void verify_object_partial_content(@Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sValue) {
+        try {
+            Assert.assertTrue(mobileElement.getText().contains(sValue))
+        } catch(AssertionError e) {
+            Context.getInstance().getReports().stepFail()
+        }
+    }
+
+    private void click_element_with_type_and_text(String sElementType, String sAttribute, String sValue) {
+        String sXpath = ""
+        switch(sElementType + "-" + sAttribute) {
+            case "button-label":
+                sXpath = XpathFormatter.LABELVALIDATIONFORMATTER.BUTTONEQUALS.getXpath(sValue)
+                break
+            case "text-label":
+                sXpath = XpathFormatter.LABELVALIDATIONFORMATTER.TEXTEQUALS.getXpath(sValue)
+                break
+            case "containstext-label":
+                sXpath = XpathFormatter.LABELVALIDATIONFORMATTER.TEXTCONTAINS.getXpath(sValue)
+                break
+        }
+        oWebDriverWait.until(ExpectedConditions.visibilityOf(Context.getInstance().findMobileElement(By.xpath(sXpath)))).click()
+    }
+
+    // Wait Methods
+    @Given("^I wait for \"(.*)\" to be visible\$")
+    void wait_for_visibility(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        oWebDriverWait.until(ExpectedConditions.visibilityOf(mobileElement))
+    }
+
+    @Given("^I wait for \"(.*)\" to be invisible\$")
+    void wait_for_invisibility(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        oWebDriverWait.until(ExpectedConditions.invisibilityOf(mobileElement))
+    }
+
+    @Given("^I wait for \"(.*)\" to be clickable\$")
+    void wait_for_clickable(@Transform(TransformToMobileElement.class) MobileElement mobileElement) {
+        oWebDriverWait.until(ExpectedConditions.elementToBeClickable(mobileElement))
+    }
+
+    @Given("^I wait for \"(.*)\" to have text as \"(.*)\"\$")
+    void wait_for_element_with_text(@Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sValue) {
+        oWebDriverWait.until(ExpectedConditions.textToBePresentInElement(mobileElement, sValue))
+    }
+
+    @Given("^I wait for \"(.*)\" to have value as \"(.*)\"\$")
+    void wait_for_element_with_value(@Transform(TransformToMobileElement.class) MobileElement mobileElement, @Transform(TransformTextUsingYAML.class) String sValue) {
+        oWebDriverWait.until(ExpectedConditions.textToBePresentInElementValue(mobileElement, sValue))
+    }
 
 
 
