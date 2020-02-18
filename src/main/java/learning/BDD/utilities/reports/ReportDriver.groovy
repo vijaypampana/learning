@@ -12,6 +12,9 @@ class ReportDriver extends ReportFormatter {
         setReportFormatters(ReporterFactory.getFactory(typeOfReport).getFormatters())
     }
 
+    ReportMeta getReportMeta() {
+        return reportMeta
+    }
 
     @Override
     void initialize() {
