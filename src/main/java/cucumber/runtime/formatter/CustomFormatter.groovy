@@ -124,7 +124,7 @@ class CustomFormatter implements Formatter {
 
     void addFeature(Feature feature) {
         //feature.getTags().stream().map(Tag::getName()).collect(Collectors.toList())            //In Java 8 Going to array and retrieving the function values to a array
-        List<String> featureTags = feature.getTags().stream().map{Tag tag -> tag.getName()}.toArray()
+        List<String> featureTags = feature.getTags().findAll {it.name}.name
         reportDriver.getReportMeta().setFeatureTags(featureTags)
         reportDriver.addFeature(feature.getKeyword(), feature.getName(), feature.getDescription(), featureTags)
     }

@@ -16,7 +16,7 @@ import org.openqa.selenium.TakesScreenshot
 
 class ExtentFormatter extends ReportFormatter {
 
-    static ExtentReports extentReports
+    private static ExtentReports extentReports
     private ExtentHtmlReporter htmlReporter
     private ExtentTest extentFeature
     private ExtentTest extentScenario
@@ -36,10 +36,10 @@ class ExtentFormatter extends ReportFormatter {
         File oFile = new File(context.getReports().getReportMeta().getReportName())
 
         if(!oFile.exists()) {
-            oFile.getParentFile().mkdir()
+            oFile.getParentFile().mkdirs()
         }
 
-        htmlReporter = new ExtentHtmlReporter()
+        htmlReporter = new ExtentHtmlReporter(oFile)
         htmlReporter.config().setDocumentTitle(Context.getInstance().getReports().getReportMeta().getReportTitle())
         htmlReporter.config().setReportName(Context.getInstance().getReports().getReportMeta().getReportTitle())
         htmlReporter.config().setChartVisibilityOnOpen(false)
