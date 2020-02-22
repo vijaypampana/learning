@@ -33,6 +33,7 @@ class CustomFormatter implements Formatter {
     public CustomFormatter(String sReportType) {
         this.context = Context.getInstance()
         this.reportDriver = context.getReports(sReportType)
+        this.tagFilterService = new TagFilterService()
     }
 
     @Override

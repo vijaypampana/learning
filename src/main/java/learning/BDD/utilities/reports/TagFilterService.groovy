@@ -31,7 +31,7 @@ class TagFilterService {
                 filteredAndModifiedTags.add(finalTag)
             }
         }
-        return filteredAndModifiedTags
+        return filteredAndModifiedTags.stream()
     }
 
     public Stream<String> filterFeatureTags(Stream<String> scenarioTags, List<String> featureTags) {

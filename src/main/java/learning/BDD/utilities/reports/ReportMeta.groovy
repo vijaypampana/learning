@@ -114,7 +114,7 @@ class ReportMeta {
                 if(markupTable == null) {
                     markupTable = new String[oTable.getRows().size()][row.getCells().size()]
                 }
-                markupTable[iRow, iColumn] = cell.getValue()
+                markupTable[iRow][iColumn] = cell.getValue()
                 iColumn++
             }
             iRow++
