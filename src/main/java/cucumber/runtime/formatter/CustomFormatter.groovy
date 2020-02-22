@@ -5,7 +5,6 @@ import cucumber.api.Result
 import cucumber.api.TestCase
 import cucumber.api.TestStep
 import cucumber.api.event.*
-import cucumber.api.formatter.Formatter
 import gherkin.ast.Feature
 import gherkin.ast.ScenarioDefinition
 import gherkin.ast.Step
@@ -14,6 +13,7 @@ import gherkin.pickles.Argument
 import gherkin.pickles.PickleString
 import gherkin.pickles.PickleTable
 import learning.BDD.utilities.Context
+import cucumber.api.formatter.Formatter
 import learning.BDD.utilities.reports.ReportDriver
 import learning.BDD.utilities.reports.TagFilterService
 import org.apache.commons.lang3.StringUtils

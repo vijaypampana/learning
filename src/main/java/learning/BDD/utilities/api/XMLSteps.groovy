@@ -32,7 +32,7 @@ class XMLSteps {
         }
     }
 
-    verifyXMLObjectEqualTo(String sQuery, String sExpectedValue, String sType) {
+    void verifyXMLObjectEqualTo(String sQuery, String sExpectedValue, String sType) {
         try {
             sQuery = Context.getInstance().getData(sQuery)
             sExpectedValue = Context.getInstance().getData(sExpectedValue)

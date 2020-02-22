@@ -32,7 +32,7 @@ class HTMLSteps {
         }
     }
 
-    verifyHTMLObjectEqualTo(String sQuery, String sExpectedValue, String sType) {
+    void verifyHTMLObjectEqualTo(String sQuery, String sExpectedValue, String sType) {
         try {
             sQuery = Context.getInstance().getData(sQuery)
             sExpectedValue = Context.getInstance().getData(sExpectedValue)
