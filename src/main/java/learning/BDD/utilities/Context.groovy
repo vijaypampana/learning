@@ -676,7 +676,7 @@ class Context extends APIContext {
         return bReturn
     }
 
-    private boolean isAPI() {
+    public boolean isAPI() {
         boolean bReturn = false
         if(oConfig.getWebDriverType().equals(WebDriverType.API)) {
             bReturn = true

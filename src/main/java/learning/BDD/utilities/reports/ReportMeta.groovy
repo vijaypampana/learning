@@ -4,8 +4,6 @@ import com.aventstack.extentreports.markuputils.Markup
 import com.aventstack.extentreports.markuputils.MarkupHelper
 import gherkin.pickles.PickleTable
 
-import javax.swing.plaf.basic.BasicToolBarUI
-
 class ReportMeta {
 
     private String  reportName

@@ -1,6 +1,8 @@
 package learning.BDD.utilities.reports
 
+import learning.BDD.utilities.Context
 import learning.BDD.utilities.utilEnum.ReportType
+import learning.BDD.utilities.utilEnum.WebDriverType
 
 class ReporterFactory {
 
@@ -41,6 +43,12 @@ class ReporterFactory {
 
     void getReportPortalFormatter() {
         //formatter.add(new ReportPortalFormatter())
+    }
+
+    void getPerfectoFormatter() {
+//        if(Context.getInstance().getConfig().getWebDriverType().equals(WebDriverType.PERFECTO) && Context.getInstance().getWebDriver() != null) {
+//            formatters.add(new PerfectoFormatter())
+//        }
     }
 
 }
