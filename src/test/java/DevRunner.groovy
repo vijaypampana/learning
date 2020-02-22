@@ -20,11 +20,16 @@ class DevRunner extends AbstractTestNGCucumberTests{
         Context.getInstance().overrideConfig("API", "MyCigna", "DEV01", "", "")
     }
 
-
-
     @AfterClass(alwaysRun = true)
     void tearDown() {
         println ("Inside Tear Down")
     }
 
 }
+
+
+//tags = ["@smoke,@regression"]     ["@smoke or @regression"]     //smoke or regression tags
+//tags = ["@smoke", "@regression"]  ["@smoke and @regression"]      //smoke and regression tags
+//tags = ["@smoke", "~@regression"] //Runs all with Smoke tests which dont have regression tag
+
+

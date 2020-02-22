@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="TESTNG Suite Learning" parallel="methods" thread-count="1">
+    <listeners>
+        <listener class-name="learning.Other.TESTNG.ListenerinTestNG"></listener>
+        <listener class-name="learning.Other.TESTNG.AnnotationTransformer"></listener>
+    </listeners>
+    <parameter name="data1" value="vijay"></parameter>
+    <parameter name="data2" value="kumar"></parameter>
+    <test name="TestNGTest">
+<!--        <groups>-->
+<!--            <run>-->
+<!--                <include name="AllClass.*"></include>-->
+<!--            </run>-->
+<!--        </groups>-->
+        <classes>
+<!--            <class name="learning.Other.TESTNG.ListernerTestFirst"></class>-->
+<!--            <class name="learning.Other.TESTNG.ListernerDataProviders"></class>-->
+<!--            <class name="learning.Other.TESTNG.ListernerTestSecond"></class>-->
+            <class name="learning.Other.TESTNG.ListernerTestParallel"></class>
+        </classes>
+    </test>
+</suite>

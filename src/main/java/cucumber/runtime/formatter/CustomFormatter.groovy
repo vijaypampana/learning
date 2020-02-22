@@ -139,7 +139,7 @@ class CustomFormatter implements Formatter {
         TestSourcesModel.AstNode astNode = testSourcesModel.getAstNode(testCase.getUri(), testCase.getLine())
         if(astNode != null) {
             ScenarioDefinition scenarioDefinition = TestSourcesModel.getScenarioDefinition(astNode)
-            List<String> scenarioTags = testCase.getTags().stream().map{Tag tag -> tag.getName()}.toArray()
+            List<String> scenarioTags = testCase.getTags().findAll{it.name}.name
             List<String> filteredTags = tagFilterService.getFilteredTags(scenarioTags, reportDriver.getReportMeta().getFeatureTags())
             reportDriver.startTest(scenarioDefinition.getKeyword(), scenarioDefinition.getName(), scenarioDefinition.getDescription(), filteredTags)
         }
