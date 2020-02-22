@@ -31,3 +31,6 @@ class CollectionsList {
     }
 
 }
+
+//LL is good for manipulation of data but retrieval is slow. It uses double linked list to store elements
+//AL is good for reading and storing data but manipulation is slow as all the bits are shifted in memory when an element is removed. It uses a dynamic Array
