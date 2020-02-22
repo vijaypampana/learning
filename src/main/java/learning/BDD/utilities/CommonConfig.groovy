@@ -1,8 +1,9 @@
 package learning.BDD.utilities
 
 import learning.BDD.utilities.utilEnum.ApplicationType
+import learning.BDD.utilities.utilEnum.BrowserType
 import learning.BDD.utilities.utilEnum.WebDriverType
-import sun.plugin2.util.BrowserType
+import org.apache.commons.lang3.StringUtils
 
 class CommonConfig {
 
@@ -20,8 +21,8 @@ class CommonConfig {
         return webDriverType
     }
 
-    void setWebDriverType(WebDriverType webDriverType) {
-        this.webDriverType = webDriverType
+    void setWebDriverType(String webDriverType) {
+        this.webDriverType = StringUtils.isEmpty(webDriverType) ? null : WebDriverType.valueOf(webDriverType)
     }
 
     Integer getWebDriverTimeOut() {
@@ -60,8 +61,8 @@ class CommonConfig {
         return applicationType
     }
 
-    void setApplicationType(ApplicationType applicationType) {
-        this.applicationType = applicationType
+    void setApplicationType(String applicationType) {
+        this.applicationType = StringUtils.isEmpty(applicationType) ? null : ApplicationType.valueOf(applicationType)
     }
 
     String getApplicationEnv() {
@@ -147,8 +148,8 @@ class CommonConfig {
             return browserName
         }
 
-        void setBrowserName(BrowserType browserName) {
-            this.browserName = browserName
+        void setBrowserName(String browserName) {
+            this.browserName = StringUtils.isEmpty(browserName) ? null : BrowserType.valueOf(browserName)
         }
 
         String getApp() {

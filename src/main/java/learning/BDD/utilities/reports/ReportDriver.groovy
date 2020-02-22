@@ -12,7 +12,7 @@ class ReportDriver extends ReportFormatter {
     List<ReportFormatter> reportFormatters = new ArrayList<>()
     ReportMeta reportMeta
 
-    ReportDriver(String typeOfReport) {
+    public ReportDriver(String typeOfReport) {
         super()
         reportMeta = new ReportMeta()
         reportMeta.setReportName(setLocalReportPath())

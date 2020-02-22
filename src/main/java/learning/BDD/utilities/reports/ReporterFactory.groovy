@@ -13,11 +13,11 @@ class ReporterFactory {
     }
 
     private ReporterFactory(String reportType) {
-        if(reportType.equalsIgnoreCase(ReportType.EXTENT)) {
+        if(reportType.equals(ReportType.EXTENT)) {
             getExtentFormatter()
-        } else if(reportType.equalsIgnoreCase(ReportType.RALLY)) {
+        } else if(reportType.equals(ReportType.RALLY)) {
             getRallyDevFormatter()
-        } else if(reportType.equalsIgnoreCase(ReportType.REPORTPORTAL)) {
+        } else if(reportType.equals(ReportType.REPORTPORTAL)) {
             getReportPortalFormatter()
         } else {
             getExtentFormatter()

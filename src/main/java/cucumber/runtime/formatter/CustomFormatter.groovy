@@ -30,9 +30,9 @@ class CustomFormatter implements Formatter {
     private List<TestStep> backgroundList = new ArrayList<>()
     private List<Result> backgroundResultList = new ArrayList<>()
 
-    CustomFormatter(String sReportType) {
-        context = Context.getInstance()
-        reportDriver = context.getReports(sReportType)
+    public CustomFormatter(String sReportType) {
+        this.context = Context.getInstance()
+        this.reportDriver = context.getReports(sReportType)
     }
 
     @Override

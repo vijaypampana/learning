@@ -1,5 +1,6 @@
 import cucumber.api.CucumberOptions
 import cucumber.api.testng.AbstractTestNGCucumberTests
+import learning.BDD.utilities.Context
 import learning.BDD.utilities.utilEnum.ReportType
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.AfterClass
@@ -16,8 +17,10 @@ class DevRunner extends AbstractTestNGCucumberTests{
 
     @BeforeClass(alwaysRun = true)
     void setup() {
-        println ("Inside Setup")
+        Context.getInstance().overrideConfig("API", "MyCigna", "DEV01", "", "")
     }
+
+
 
     @AfterClass(alwaysRun = true)
     void tearDown() {

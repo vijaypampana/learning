@@ -8,7 +8,7 @@ webDriverAuthentication:
 
 
 # Application Under Test
-applicationType: 'MyTest'
+applicationType: 'MyCigna'
 applicationEnvironment: 'ACC01'
 screenshotForAllSteps: false
 
