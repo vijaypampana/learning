@@ -21,12 +21,12 @@ class ReportDriver extends ReportFormatter {
 
     String getReportDirectoryName() {
         String sDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MMM_yyyy"))
-        return "reports".concat(File.separator).concat("Run_",sDate)
+        return "reports".concat(File.separator).concat("Run_"+sDate)
     }
 
     String setLocalReportPath() {
         String sTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH_mm_ss"))
-        return getReportDirectoryName().concat(File.separator).concat(sTime, "__").concat(context.isAPI() ? "API" : "UI" ).concat(".html")
+        return getReportDirectoryName().concat(File.separator).concat(sTime+"__").concat(context.isAPI() ? "API" : "UI" ).concat(".html")
     }
 
     void setReportFormatters(List<ReportFormatter> reportFormatterList) {
