@@ -278,6 +278,7 @@ class Context extends APIContext {
             case WebDriverType.PERFECTO:
                 oCapabilities.setCapability("securityToken", oConfig.getWebDriverAuthentication().getPassword())
                 oCapabilities.setCapability("deviceSessionId", oConfig.getCapability().getPerfectoSessionID())
+                oCapabilities.setCapability("enableAppiumBehavior", true)
                 startPerfectoDriver(sBrowserType, sDeviceName)
                 break
             case WebDriverType.PERFECTOWEB:
@@ -337,7 +338,7 @@ class Context extends APIContext {
 
             if(!oConfig.getCapability().getApp().isEmpty()) {
                 //TBD
-                oConfig.setCapability(MobileCapabilityType.APP, Utility.getTextByOS(oConfig.getCapability().getApp()))
+                oCapabilities.setCapability(MobileCapabilityType.APP, Utility.getTextByOS(oConfig.getCapability().getApp()))
 
                 if(oConfig.getCapability(MobileCapabilityType.APP).toString().toLowerCase().endsWith(".ipa")) {
                     bIOS = true
@@ -350,9 +351,7 @@ class Context extends APIContext {
             } else {
                 oCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, oConfig.getApplicationType().getsAndroidPackage())
                 oCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, oConfig.getApplicationType().getsAndroidActivity())
-                if(!oConfig.getWebDriverType().equals(WebDriverType.PERFECTO)) {
-                    oCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2")
-                }
+                oCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2")
             }
         } else {
             switch (oBrowserType) {
@@ -406,14 +405,20 @@ class Context extends APIContext {
         if(sBrowserType == null) {
             oCapabilities.setBrowserName("mobileOS")
 
-            if(oConfig.getCapability(MobileCapabilityType.APP).toString().toLowerCase().endsWith(".ipa")) {
-                bIOS = true
+            if(!oConfig.getCapability().getApp().isEmpty()) {
+                oCapabilities.setCapability(MobileCapabilityType.APP, Utility.getTextByOS(oConfig.getCapability().getApp()))
+                if(oCapabilities.getCapability(MobileCapabilityType.APP).toString().toLowerCase().endsWith(".ipa")) {
+                    bIOS = true
+                }
             }
 
             if(bIOS) {
-                oConfig.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest")
+                oCapabilities.setCapability(IOSMobileCapabilityType.BUNDLE_ID, oConfig.getApplicationType().getsIOSBundleID())
+                oCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest")
             } else {
-                oConfig.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2")
+                oCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, oConfig.getApplicationType().getsAndroidPackage())
+                oCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, oConfig.getApplicationType().getsAndroidActivity())
+                oCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIAutomator2")
             }
         } else {
             switch (sBrowserType) {
@@ -467,11 +472,11 @@ class Context extends APIContext {
                 logger.error(e.getMessage())
             }
 
-            if(!oConfig.getCapability().getApp().isEmpty()) {
-                PerfectoUtils.installApp(Utility.getTextByOS(oConfig.getCapability().getApp()))
-            }
-
-            PerfectoUtils.launchApp(bIOS ? oConfig.getApplicationType().getsIOSBundleID() : oConfig.getApplicationType().getsAndroidPackage())
+//            if(!oConfig.getCapability().getApp().isEmpty()) {
+//                PerfectoUtils.installApp(Utility.getTextByOS(oConfig.getCapability().getApp()))
+//            }
+//
+//            PerfectoUtils.launchApp(bIOS ? oConfig.getApplicationType().getsIOSBundleID() : oConfig.getApplicationType().getsAndroidPackage())
             getAppiumDriver().context("NATIVE_APP")
 
 
