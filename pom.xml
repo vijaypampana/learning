@@ -19,6 +19,7 @@
         <appium.version>7.0.0</appium.version>
         <jackson.version>2.9.4</jackson.version>
         <surefire.forkNumber>5</surefire.forkNumber>
+        <perfecto.reportium.version>2.2.9</perfecto.reportium.version>
     </properties>
 
     <dependencies>
@@ -94,7 +95,49 @@
             <artifactId>browserstack-local-java</artifactId>
             <version>1.0.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.perfecto.reporting-sdk</groupId>
+            <artifactId>reportium-java</artifactId>
+            <version>${perfecto.reportium.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>repo1.perfectomobile.com</id>
+            <name>Perfecto mobile</name>
+            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>Repo1</name>
+            <url>https://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Repo1</name>
+            <url>https://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
