@@ -1,0 +1,40 @@
+#.yml or .yaml
+person:
+  name: "Vijay Kumar Pampana"      #String with double quotes
+  anchor: &idnum 'm52844'          #Single Quote String and can be replaced any where with *idnum
+  age: 36                          #Integer
+  gpa: 8.50                        #Float
+  male: true                       #Boolean
+  birthday: 1985-02-28 20:55:00    #ISO 8601 notation
+  flaws: null                      #null value
+  hobbies:
+    - Gym
+    - Tennis
+    - Swimming
+  movies: ["Dark Knight", "Good Will Hunting"]
+  friends:
+    - name: "Hemanth"
+      age: 28
+    - { name: "Lakkoju", age: 31 }
+    -
+      name: "Praveen"
+      age: 34
+  description: >
+    This is lot of text that I want to enter into this field
+    but format should not be retained and should be displayed in one line
+  signature: |
+    Vijay Kumar Pampana
+    Manager - Projects
+  id: *idnum
+
+  base: &base
+    var1: value1
+    var2: value2
+
+  foo:
+    <<: *base                     #<< Anchoring an Object
+    age: 36
+
+  dataTypeStr:  !!String "Vijay"
+  dataTypeInt:  !!int 5.3
+  dataTypeFloat:  !!float 23

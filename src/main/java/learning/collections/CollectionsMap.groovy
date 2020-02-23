@@ -15,7 +15,8 @@ class CollectionsMap {
         testHashMap.forEach({k,v -> println("Key is $k and the Value is $v")})
         testHashMap.remove("User1")
         testHashMap.entrySet().each { me ->
-            println(me.key + " : " + me.value)
+            println(me.key + " : " + me.value
+            )
         }
     }
 }
