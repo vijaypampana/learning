@@ -19,6 +19,8 @@ class ReporterFactory {
             getRallyDevFormatter()
         } else if(reportType.equals(ReportType.REPORTPORTAL)) {
             getReportPortalFormatter()
+        } else if (reportType.equals(ReportType.PERFECTO)) {
+            getPerfectoFormatter()
         } else {
             getExtentFormatter()
         }
@@ -46,9 +48,9 @@ class ReporterFactory {
     }
 
     void getPerfectoFormatter() {
-//        if(Context.getInstance().getConfig().getWebDriverType().equals(WebDriverType.PERFECTO) && Context.getInstance().getWebDriver() != null) {
-//            formatters.add(new PerfectoFormatter())
-//        }
+        if(Context.getInstance().getConfig().getWebDriverType().equals(WebDriverType.PERFECTO) && Context.getInstance().getWebDriver() != null) {
+            formatters.add(new PerfectoFormatter())
+        }
     }
 
 }
