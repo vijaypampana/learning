@@ -15,6 +15,7 @@ import io.appium.java_client.remote.AndroidMobileCapabilityType
 import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
 import learning.BDD.utilities.reports.ReportDriver
+import learning.BDD.utilities.reports.reportPortal.ReportPortalUtils
 import learning.BDD.utilities.util.CoreUtil
 import learning.BDD.utilities.util.DataUtil
 import learning.BDD.utilities.util.Utility

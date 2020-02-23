@@ -58,7 +58,7 @@ class ReportPortalFormatter extends ReportFormatter {
         startFeature(sKeyword, sName, sDescription, tags)
     }
 
-    //This method to start the reportal launch Object
+    //This method to start the reportportal launch Object
     void startLaunch() {
         if(RP == null) {
             RP = Suppliers.memoize(new Supplier<Launch>() {
@@ -246,7 +246,7 @@ class ReportPortalFormatter extends ReportFormatter {
 
     protected void reportPortalResult(Result.Type result, String message) {
         def RPLogLevel = ReportPortalConstants.CUCUMBERLOGGERLEVELMAPPING.get(result)
-        reportPortalUtils.sendLog(message, RPLogLevel, isScreenShotRequired(RPLogLevel) ? getScreenShotFile() : null)
+        ReportPortalUtils.sendLog(message, RPLogLevel, isScreenShotRequired(RPLogLevel) ? getScreenShotFile() : null)
     }
 
     Predicate<ReportPortalConstants.ReportPortalLoggerLevels> isScreenShotRequired = { loggerLevel ->
