@@ -424,7 +424,8 @@ class AppiumSteps {
         oAction.perform()
     }
 
-    void swipe(MobileElement oStart, MobileElement oEnd) {
+    static void swipe(MobileElement oStart, MobileElement oEnd) {
+        AppiumDriver oDriver = Context.getInstance().getAppiumDriver()
         TouchAction oAction = new TouchAction(oDriver)
         if(oDriver instanceof AndroidDriver) {
             oAction.longPress(ElementOption.element(oStart)).moveTo(ElementOption.element(oEnd)).release()
