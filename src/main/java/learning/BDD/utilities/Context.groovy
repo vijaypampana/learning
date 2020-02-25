@@ -5,8 +5,10 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.galenframework.reports.GalenTestInfo
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import cucumber.api.Scenario
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
@@ -14,6 +16,7 @@ import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
 import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
+import learning.BDD.utilities.galen.UIValidationResult
 import learning.BDD.utilities.reports.ReportDriver
 import learning.BDD.utilities.reports.reportPortal.ReportPortalUtils
 import learning.BDD.utilities.util.CoreUtil
@@ -89,6 +92,9 @@ class Context extends APIContext {
 
     private String sCurrentPage = ""
     private Map<String, Object> oPageInstance = new HashMap<>()
+    private static Scenario scenario
+    private UIValidationResult uiValidationResult
+
 
     //Browser Stack variables
     Local bsLocal = null
@@ -890,6 +896,20 @@ class Context extends APIContext {
 
     void sleep(long iMilliSeconds) {
         Thread.sleep(iMilliSeconds)
+    }
+
+    void populateUITestResult(GalenTestInfo testResult) {
+        if(uiValidationResult == null) {
+            uiValidationResult = UIValidationResult.getInstance()
+        }
+        uiValidationResult.populateTestResults(testResult)
+    }
+
+    List<GalenTestInfo> getLayoutTestResults() {
+        if(uiValidationResult == null) {
+            uiValidationResult = UIValidationResult.getInstance()
+        }
+        return uiValidationResult.getTestResults()
     }
 
 }

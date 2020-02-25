@@ -20,6 +20,7 @@
         <jackson.version>2.9.4</jackson.version>
         <surefire.forkNumber>5</surefire.forkNumber>
         <perfecto.reportium.version>2.2.9</perfecto.reportium.version>
+        <galen.java.version>2.4.4</galen.java.version>
     </properties>
 
     <dependencies>
@@ -113,6 +114,13 @@
             <groupId>com.epam.reportportal</groupId>
             <artifactId>commons-model</artifactId>
             <version>4.2.0</version>
+        </dependency>
+
+<!--        <Look and Feel Validation>-->
+        <dependency>
+            <groupId>com.galenframework</groupId>
+            <artifactId>galen-java-support</artifactId>
+            <version>${galen.java.version}</version>
         </dependency>
 
     </dependencies>
