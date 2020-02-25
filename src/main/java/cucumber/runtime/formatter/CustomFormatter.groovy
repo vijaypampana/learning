@@ -207,7 +207,7 @@ class CustomFormatter implements Formatter {
                 backgroundResultList.add(event.result)
             } else {
                 reportDriver.stopStep(event.result.getDuration(),
-                        (event.result.getStatus().equals(Result.Type.PASSED) && reportDriver.getReportMeta().bStepFailure()) ? Result.Type.FAILED : event.result.getStatus(),
+                        (event.result.getStatus().equals(Result.Type.PASSED) && reportDriver.getReportMeta().getbStepFailure()) ? Result.Type.FAILED : event.result.getStatus(),
                         event.result.getErrorMessage())
             }
         }
