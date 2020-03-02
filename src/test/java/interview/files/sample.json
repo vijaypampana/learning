@@ -1,0 +1,39 @@
+{
+  "result" : {
+    "name": "Vijay",
+    "age": 37,
+    "experiences" : [
+      {
+        "company": "Cognizant India",
+        "startYearMonth": "2006/07",
+        "endYearMonth": "2008/07",
+        "city": "Hyderabad",
+        "country": "India"
+      },
+      {
+        "company": "ADP India",
+        "startYearMonth": "2008/07",
+        "endYearMonth": "2010/07",
+        "city": "Hyderabad",
+        "country": "India"
+      },
+      {
+        "company": "Cognizant India",
+        "startYearMonth": "2010/07",
+        "endYearMonth": "2013/04",
+        "city": "Hyderabad",
+        "country": "India"
+      },
+      {
+        "company": "Cognizant US",
+        "startYearMonth": "2013/05",
+        "city": "Hartford",
+        "country": "USA"
+      }
+    ]
+  },
+  "metadata": {
+    "status": 200,
+    "output": "OK"
+  }
+}
