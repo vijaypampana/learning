@@ -6,6 +6,11 @@ import io.appium.java_client.pagefactory.HowToUseLocators
 import io.appium.java_client.pagefactory.iOSXCUITFindBy
 import org.apache.commons.lang3.StringUtils
 
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
+import java.sql.Statement
+
 import static io.appium.java_client.pagefactory.LocatorGroupStrategy.CHAIN
 import learning.BDD.utilities.Context
 
@@ -114,7 +119,7 @@ class CommonObjects {
         }
 
         void setPopUpText(String popUpText) {
-            this.popUpText = Context.getInstance().bIOS ? popUpTextIOS : StringUtils.isEmpty(popUpTextAndroidAndroid) ? popUpTextIOS : popUpTextAndroid
+            this.popUpText = Context.getInstance().bIOS ? popUpTextIOS : StringUtils.isEmpty(popUpTextAndroid) ? popUpTextIOS : popUpTextAndroid
         }
 
         String getPopUpButton() {
@@ -125,5 +130,28 @@ class CommonObjects {
             this.popUpButton = Context.getInstance().bIOS ? popUpButtonIOS : StringUtils.isEmpty(popUpButtonAndroid) ? popUpButtonIOS : popUpButtonAndroid
         }
     }
+
+    //Method to connect to DB2 DB and run query
+    public String getDB2Pin(String subscriber, String contact) {
+
+        String DB2Url = "jdbc:db2://DBCXXT.sys.test.com:50200/DB2FD";
+        String userName = "username", password = "password";
+        String sqlQuery = "Select token from db2.table_name where sbsb = '" + subscriber + "' and contact = '" + contact + "' order by last_updated_ts desc";
+        try {
+            Class.forName("com.ibm.db2.jcc.DB2Driver");
+            Connection conn = DriverManager.getConnection(DB2Url, userName, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.execute(sqlQuery);
+            if(rs.next()) {
+                return rs.getString("token")
+            }
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
+
+        return null;
+
+    }
+
 
 }

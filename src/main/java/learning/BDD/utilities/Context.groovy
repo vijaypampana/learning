@@ -16,6 +16,7 @@ import io.appium.java_client.ios.IOSDriver
 import io.appium.java_client.remote.AndroidMobileCapabilityType
 import io.appium.java_client.remote.IOSMobileCapabilityType
 import io.appium.java_client.remote.MobileCapabilityType
+import io.github.bonigarcia.wdm.WebDriverManager
 import learning.BDD.utilities.galen.UIValidationResult
 import learning.BDD.utilities.reports.ReportDriver
 import learning.BDD.utilities.reports.reportPortal.ReportPortalUtils
@@ -584,15 +585,19 @@ class Context extends APIContext {
     private void startLocalDriver(BrowserType oBrowserType, String sDeviceName) {
         switch (oBrowserType) {
             case BrowserType.Firefox:
+                WebDriverManager.firefoxdriver().setup()
                 oWebDriver = new FirefoxDriver(getFirefoxOptions())
                 break
             case BrowserType.Opera:
+                WebDriverManager.operadriver().setup()
                 oWebDriver = new OperaDriver()
                 break
             case BrowserType.IE:
+                WebDriverManager.iedriver().setup()
                 oWebDriver = new InternetExplorerDriver(getInternetExplorerOptions())
                 break
             case BrowserType.Edge:
+                WebDriverManager.edgedriver().setup()
                 oWebDriver = new EdgeDriver()
                 break
             case BrowserType.Android:
@@ -605,6 +610,7 @@ class Context extends APIContext {
                 oWebDriver = new SafariDriver()
                 break
             case BrowserType.Chrome:
+                WebDriverManager.chromedriver().setup()
                 oWebDriver = new ChromeDriver(getChromeOptions(sDeviceName))
                 break
             default:

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class MainTest {
 
@@ -35,6 +36,15 @@ public class MainTest {
 //        System.out.println(stringUtil.arrayToList(str.split(" ")));
 //        System.out.println(stringUtil.arrayToList(str.split(" "), String::toUpperCase));
         System.out.println(fileUtils.getnThMinInt(Arrays.asList(intArray), 1));
+
+
+        String[] arrayStry = {"Vijay", "Ravi"};
+
+        List<String> arrayList = new ArrayList<>(Arrays.asList("Vijay", "Ravi"));
+        arrayList.add(0, "test");
+        Arrays.stream(arrayStry).map(String::toUpperCase).collect(Collectors.toList());
+
+
 
     }
 }
