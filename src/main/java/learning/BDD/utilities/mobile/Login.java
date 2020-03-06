@@ -2,9 +2,11 @@ package learning.BDD.utilities.mobile;
 
 import cucumber.api.java.en.Given;
 import io.appium.java_client.AppiumDriver;
+import io.restassured.RestAssured;
 import learning.BDD.utilities.Context;
 import learning.BDD.utilities.mobile.CommonObjects;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.HashMap;
@@ -78,14 +80,46 @@ public class Login extends CommonObjects {
 
             context.setCurrentPage(deepLinks.getLandingPage());
             context.getWebDriverWait().until(ExpectedConditions.visibilityOf(context.findElement("WaitElement")));
-
         }
-
-
     }
 
     void apiLogin(String sUserName) {
 
+        context.setsHost(env.getsAPIHost());
+        String token = RestAssured.given()
+                .param("client_id", "de_client_1")
+                .param("grant_type", "password")
+                .param("username", sUserName)
+                .param("password", "cigna123")
+                .when()
+                .post(EndPoint.valueOf("LOGIN_POST").getUrl())
+                .then()
+                .statusCode(200)
+                .extract()
+                .body().jsonPath().getString("access_token");
+
+        context.addData("API_TOKEN", "Bearer " + token);
+
+        String jwtToken = RestAssured.given().header(HttpHeaders.AUTHORIZATION, context.getData("API_TOKEN"))
+                                .when().get(EndPoint.valueOf("JWT_GET").getUrl()).then().statusCode(200).extract().jsonPath().getString("access_token");
+
+        context.addData("JWT_TOKEN", "Bearer " + jwtToken);
+
+    }
+
+    public static enum EndPoint {
+        JWT_GET("/mga/sps/oauth/oauth20/token"),
+        LOGIN_POST("/mga/sps/oauth/oauth20/token");
+
+        private String url;
+
+        EndPoint(String url) {
+            this.url = url;
+        }
+
+        public String getUrl() {
+            return url;
+        }
     }
 
 
