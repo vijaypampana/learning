@@ -20,7 +20,7 @@ import io.github.bonigarcia.wdm.WebDriverManager
 import learning.BDD.utilities.galen.UIValidationResult
 import learning.BDD.utilities.reports.ReportDriver
 import learning.BDD.utilities.reports.reportPortal.ReportPortalUtils
-import learning.BDD.utilities.util.CoreUtil
+
 import learning.BDD.utilities.util.DataUtil
 import learning.BDD.utilities.util.Utility
 import learning.BDD.utilities.utilEnum.BrowserType

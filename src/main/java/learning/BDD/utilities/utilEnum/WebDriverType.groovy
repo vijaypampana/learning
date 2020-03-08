@@ -8,7 +8,7 @@ enum WebDriverType {
     BROWSERSTACK("https", "hub-cloud.browserstack.com", "", "/wd/hub"),
     APPIUM("http", "localhost", "4723", "/wd/hub"),
     ZALENIUM("http", "zalenium", "", "/wd/hub"),
-    SELENIUMLOCAL("http", "localhost", "4444", "/wd/hub")
+    SELENIUMLOCAL("", "", "", "")
 
 
 

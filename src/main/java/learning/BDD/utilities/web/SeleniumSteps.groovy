@@ -9,6 +9,7 @@ import learning.BDD.utilities.transformer.TransformToAssert
 import learning.BDD.utilities.transformer.TransformToCssColor
 import learning.BDD.utilities.transformer.TransformToWebElement
 import learning.BDD.utilities.transformer.TransformToWebElements
+import learning.BDD.utilities.util.DataUtil
 import learning.BDD.utilities.utilEnum.CssProperty
 import learning.BDD.utilities.utilEnum.Position
 import org.jsoup.Jsoup
@@ -221,7 +222,7 @@ class SeleniumSteps {
     //TBD
     void waitForLoad(WebDriver oDriver) {
         try {
-            oWebDriverWait.until(((JavascriptExecutor) driver).executeScript("return.document.readyState").toString().matches("interactive | complete"))
+            oWebDriverWait.until(((JavascriptExecutor) driver).executeScript("return.document.readyState").toString().matches("interactive|complete"))
         } catch (Exception e) {
 
         }
@@ -264,6 +265,7 @@ class SeleniumSteps {
     @Given("^I switch to child window\$")
     void switchWindow() {
         sParentWindow = Context.getInstance().getWebDriver().getWindowHandle()
+        DataUtil.store("PARENT_WINDOW", sParentWindow)
         List<String> multipleWindows = new ArrayList<>()
         waitForLoad(oDriver)
         if(multipleWindows.size() > 1) {
@@ -281,6 +283,7 @@ class SeleniumSteps {
 
     @Given("^I switch back to parent window\$")
     void switch_parent_window() {
+        String sParentWindow = DataUtil.retrieveString("PARENT_WINDOW")
         Context.getInstance().getWebDriver().close()
         Context.getInstance().getWebDriver().switchTo().window(sParentWindow)
     }
