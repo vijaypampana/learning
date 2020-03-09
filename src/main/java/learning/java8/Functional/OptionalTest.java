@@ -44,12 +44,16 @@ public class OptionalTest {
         Function<String, Integer> getLetterCount = t -> t.length();
 
         String testWord = "Vijay";
+
+        //ofNullable will return empty when it is null otherwise actual object
         Optional<String> testOptional = Optional.ofNullable(getSecondWord.apply(testWord));
+        //If present example where it uses a consumer function (system.out::println)
         testOptional.ifPresent(System.out::println);
+        //orElse will return Great when testOptional is empty
         System.out.println(getLetterCount.apply(testOptional.orElse("Great")));
+        Optional.ofNullable(getSecondWord.apply(testWord)).ifPresent(System.out::println);
+        //Chain of functions (Map takes a function as input)
         Optional.ofNullable(getSecondWord.apply(testWord)).map(getLetterCount).ifPresent(System.out::println);
-
-
     }
 
     @Test
@@ -60,3 +64,10 @@ public class OptionalTest {
 
 
 }
+
+// Optional
+// ofNullable : gives a empty when null otherwise the value
+// isPresent() : Boolean eg; if(testOptional.isPresent())
+// ifPresent(Consumer c) eg: ifPresent(System.out::println)
+// getOrElse(Supplier s)
+

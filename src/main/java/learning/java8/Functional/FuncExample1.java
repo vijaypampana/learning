@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
 
-public class funcExample1 {
+public class FuncExample1 {
 
     @Test
     public void readFirst40Error() throws IOException {

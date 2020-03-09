@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-public class predicateExample {
+public class PredicateExample {
 
     //This test shows predicate, test, AND, OR operations
     @Test

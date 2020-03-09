@@ -2,7 +2,7 @@ package learning.java8.Functional;
 
 import org.testng.annotations.Test;
 
-public class streamExamples {
+public class StreamExamples {
 
     @Test
     public void testStream() {
