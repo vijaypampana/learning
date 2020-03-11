@@ -145,7 +145,14 @@ public class StreamExamples {
         //employeesList.stream().map(t -> t.getDept()).distinct().sorted().forEach(System.out::println);
         List<String> deptList = employeesList.stream().map(t -> t.getDept()).distinct().sorted().collect(Collectors.toList());
         HashSet<String> deptHashSet = employeesList.stream().map(t -> t.getDept()).collect(Collectors.toCollection(HashSet::new));
+        Map<String, List<Employee>> employeeMap = employeesList.stream().collect(Collectors.groupingBy(Employee::getDept));
+        employeeMap.forEach((K,V) -> System.out.println("key value is " + K + " and number of employess " + V.size()));
 
+        Map<String, Integer> salaryMap = employeesList.stream().collect(Collectors.groupingBy(Employee::getDept, Collectors.summingInt(Employee::getSalary)));
+        salaryMap.forEach((K,V) -> System.out.println(K + V));
+
+        Map<String, Double> averageMap = employeesList.stream().collect(Collectors.groupingBy(Employee::getDept, Collectors.averagingDouble(Employee::getSalary)));
+        averageMap.forEach((K,V) -> System.out.println(K + V));
     }
 
     class Employee {
