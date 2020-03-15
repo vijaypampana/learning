@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+
+<RecordingSession nonLeaf="WIDE" leaf="LOOSE" asObject="true">
+    <Protocol type="com.itko.lisa.vse.stateful.protocol.rrpairs.VSFromRRPairsTransportProtocol">
+        <Transport allAreStateless="true" asObject="true" desensitize="false" duptxns="false">
+            <exportFile></exportFile>
+            <RequestSide>
+                <Protocol type="com.itko.lisa.vse.stateful.protocol.rest.RestDataProtocol">
+                    <idRegexUnparsed>[a-zA-Z]+[0-9]{5,}[a-zA-Z]*</idRegexUnparsed>
+                    <requestSideUnparsed>true</requestSideUnparsed>
+                    <maxChangesUnparsed>1</maxChangesUnparsed>
+                    <startPositionUnparsed>3</startPositionUnparsed>
+                    <urlParamPrefixUnparsed>URLPARAM</urlParamPrefixUnparsed>
+                    <rules>
+                        <rule>
+                            <operation>GET /test/v1/members/{URLPARAM0}/orders</operation>
+                        </rule>
+                    </rules>
+                </Protocol>
+                <Protocol type="com.itko.lisa.vse.stateful.protocol.scriptable.ScriptableDataProtocolHandler">
+                    <updateRequestScript><![CDATA[import com.itko.util.ParameterList;
+                    import com.itko.util.Parameter;
+                    import com.ca.lisa.apptest.json.LisaJSONObject;
+
+                    ParameterList args = lisa_vse_request.getArguments();
+
+                    if(!args.containsKey("testId")) {
+                        args.addParameter(new Parameter("testId",""));
+                    }
+
+                    ParameterList metadata = lise_vse_request.getMetaData();
+
+                    if (metadata.containsKey("Authorization")) {
+                        String token = metadata.getParameter("Authorization").getValue();
+                        _logger.info("Token -> {}", token);
+
+                        String[] tokens = token.split("\\.");
+                        _logger.info("Token Header-> {}", tokens[0]);
+                        _logger.info("Token Payload-> {}", tokens[1]);
+                        _logger.info("Token Signature-> {}", tokens[2]);
+
+                        String payload = new String(com.itko.util.Base64.decodeAndUnzip(tokens[1])) + "}";
+                        _logger.info("Actual Payload -. {}", payload);
+
+                        LisaJSONObject payloadJSON = new LisaJSONObject(payload);
+
+                        String dn = payloadJSON.get("sub");
+
+                        args.setParameterValue("ssoId", dn);
+                        _logger.info("SSOID -> {}", dn);
+
+                        lisa_vse_request.setArguments(args);]]></updateRequestScript>
+                </Protocol>
+            </RequestSide>
+        </Transport>
+        <rrDir>pairs</rrDir>
+        <transportProtocol>
+            <Protocol type="com.itko.lisa.vse.stateful.protocol.http.HttpProtocolHandler">
+                <Transport allAreStateless="true" asObject="true" desensitize="false" duptxns="false">
+                </Transport>
+                <listenPort>8001</listenPort>
+                <targetHost>localhost</targetHost>
+                <targetPort>80</targetPort>
+                <useGateway>true</useGateway>
+                <hostHeaderPassThrough>false</hostHeaderPassThrough>
+                <ssl toClient="false" sslClientAuthType="none" toServer="false"/>
+                <sslClientKeystoreFile>{{ssl.client.cert.path}}</sslClientKeystoreFile>
+                <sslClientKeyStorePWEnc>password</sslClientKeyStorePWEnc>
+                <basePath>/test/v1/members</basePath>
+            </Protocol>
+        </transportProtocol>
+    </Protocol>
+</RecordingSession>

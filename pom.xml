@@ -133,20 +133,6 @@
 
     <repositories>
         <repository>
-            <id>repo1.perfectomobile.com</id>
-            <name>Perfecto mobile</name>
-            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
-        </repository>
-        <repository>
-            <id>bintray-epam-reportportal</id>
-            <name>bintray</name>
-            <url>http://dl.bintray.com/epam/reportportal</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-
-        </repository>
-        <repository>
             <id>central</id>
             <name>Repo1</name>
             <url>https://repo1.maven.org/maven2/</url>
@@ -158,6 +144,20 @@
                 <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>repo1.perfectomobile.com</id>
+            <name>Perfecto mobile</name>
+            <url>https://repo1.perfectomobile.com/public/repositories/maven</url>
+        </repository>
+        <repository>
+            <id>bintray-epam-reportportal</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/epam/reportportal</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -225,6 +225,12 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>4.4.0</version>
             </plugin>
 
         </plugins>

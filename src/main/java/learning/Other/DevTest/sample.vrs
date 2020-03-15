@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+
+<RecordingSession nonLeaf="WIDE" leaf="LOOSE" asObject="true">
+    <Protocol type="com.itko.lisa.vse.stateful.protocol.rrpairs.VSFromRRPairsTransportProtocol">
+        <Transport allAreStateless="true" asObject="true" desensitize="false" duptxns="false">
+            <exportFile/>
+            <RequestSide>
+                <Protocol type="com.itko.lisa.vse.stateful.protocol.rest.RestDataProtocol">
+                <idRegexUnparsed>[a-zA-Z]+[0-9]{5,}[a-zA-Z]*</idRegexUnparsed>
+                <requestSideUnparsed>true</requestSideUnparsed>
+                <maxChangesUnparsed>1</maxChangesUnparsed>
+                <startPositionUnparsed>3</startPositionUnparsed>
+                <urlParamPrefixUnparsed>URLPARAM</urlParamPrefixUnparsed>
+                <rules>
+                    <rule>
+                        <operation>GET /test/v1/members/{URLPARAM0}/orders</operation>
+                    </rule>
+                </rules>
+                </Protocol>
+                <Protocol type="com.itko.lisa.vse.stateful.protocol.rest.RestDataProtocol">
+                    <idRegexUnparsed>[a-zA-Z]+[0-9]{5,}[a-zA-Z]*</idRegexUnparsed>
+                    <requestSideUnparsed>true</requestSideUnparsed>
+                    <maxChangesUnparsed>1</maxChangesUnparsed>
+                    <startPositionUnparsed>3</startPositionUnparsed>
+                    <urlParamPrefixUnparsed>URLPARAM</urlParamPrefixUnparsed>
+                    <rules>
+                        <rule>
+                            <operation>GET /test/v1/members/{URLPARAM0}/prescriptions</operation>
+                        </rule>
+                    </rules>
+                </Protocol>
+                <Protocol type="com.itko.lisa.vse.stateful.common.datahandler.RequestDataManagerProtocolHandler">
+                    <actions>
+                        <action>delete argument &quot;startDate&quot;</action>
+                        <action>delete argument &quot;endDate&quot;</action>
+                    </actions>
+                </Protocol>
+            </RequestSide>
+        </Transport>
+        <rrDir>pairs</rrDir>
+        <transportProtocol>
+            <Protocol type="com.itko.lisa.vse.stateful.protocol.http.HttpProtocolHandler">
+                <Transport allAreStateless="true" asObject="true" desensitize="false" duptxns="false">
+                </Transport>
+                <listenPort>8001</listenPort>
+                <targetHost>localhost</targetHost>
+                <targetPort>80</targetPort>
+                <useGateway>true</useGateway>
+                <hostHeaderPassThrough>false</hostHeaderPassThrough>
+                <ssl toClient="false" sslClientAuthType="none" toServer="false"/>
+                <sslClientKeystoreFile>{{ssl.client.cert.path}}</sslClientKeystoreFile>
+                <sslClientKeyStorePWEnc>password</sslClientKeyStorePWEnc>
+                <basePath>/test/v1/members</basePath>
+            </Protocol>
+        </transportProtocol>
+    </Protocol>
+</RecordingSession>
