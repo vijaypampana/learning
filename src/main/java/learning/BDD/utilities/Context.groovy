@@ -200,7 +200,7 @@ class Context extends APIContext {
 
     //This method will read the config.yaml file and initialize the Common Config object
     void setConfig() {
-        logger.info("Started reading CommonConfig.yaml file")
+//        logger.info("Started reading CommonConfig.yaml file")
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory())
 
@@ -246,13 +246,13 @@ class Context extends APIContext {
         }
 
         if(StringUtils.isEmpty(sDeviceName)) {
-            logger.info("Device Name is empty")
+            //logger.info("Device Name is empty")
         } else {
             oConfig.getCapability().setDeviceName(swebDriverType)
         }
 
         if(StringUtils.isEmpty(sBrowserName)) {
-            logger.info("Browser Name is empty")
+            //logger.info("Browser Name is empty")
         } else {
             oConfig.getCapability().setBrowserName(sBrowserName)
         }

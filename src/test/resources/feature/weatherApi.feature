@@ -11,9 +11,9 @@ Feature: This test is to run weather API
     Then I make API GET call using URL "/<TimeZone>/<temp>,<precipitation>,<cloud>/<latitude>,<longitude>/<format>"
     # The below step is important as it verify the response code and at the same time set ValidatableResponse for subsequent processing
     Then I verify API response status code is 200
-    Then I set API JSON root as "data.find {it.parameter == 't_2m:C'}" and verify response using below table
+    Then I set API JSON root as "data.find {it.parameter == 't_2m:C'}.coordinates[0]" and verify response using below table
     | lat | <latitude> |
-#    | lon | <longitude> |
+    | lon | <longitude> |
 
     Examples:
       | TimeZone             | temp   | precipitation | cloud               | latitude  | longitude | format |
