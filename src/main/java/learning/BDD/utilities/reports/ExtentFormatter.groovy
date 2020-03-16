@@ -224,13 +224,14 @@ class ExtentFormatter extends ReportFormatter {
 
     @Override
     void stepScreenshot() {
-        //if(!context.isAPI())
-        try {
-            byte[] content = ((TakesScreenshot) context.getWebDriver()).getScreenshotAs(OutputType.BYTES)
-            context.getReports().getReportMeta().setScreenshot(content)
-            extentStep.addScreenCaptureFromPath("data:image/gif;base64," + Base64.getEncoder().encodeToString(content))
-        } catch (IOException e) {
-            extentStep.fatal(e.getStackTrace().toString())
+        if(!context.isAPI()) {
+            try {
+                byte[] content = ((TakesScreenshot) context.getWebDriver()).getScreenshotAs(OutputType.BYTES)
+                context.getReports().getReportMeta().setScreenshot(content)
+                extentStep.addScreenCaptureFromPath("data:image/gif;base64," + Base64.getEncoder().encodeToString(content))
+            } catch (IOException e) {
+                extentStep.fatal(e.getStackTrace().toString())
+            }
         }
     }
 

@@ -31,12 +31,12 @@ class JSONSteps {
             if(row.size()==3) {
                 verifyJsonObjectEqualto(row.get(0), row.get(1), row.get(2))
             } else {
-                verifyJsonObjectEqualto(row.get(0), row.get(1))
+                verifyJsonObjectEqualto(row.get(0).toString(), row.get(1).toString())
             }
         }
     }
 
-    void verifyJsonObjectEqualto(String sQuery, String sExpectedValue, String type) {
+    public void verifyJsonObjectEqualto(String sQuery, String sExpectedValue, String type) {
         try {
             sQuery = Context.getInstance().getData(sQuery)
             sExpectedValue = Context.getInstance().getData(sExpectedValue)
@@ -47,7 +47,7 @@ class JSONSteps {
     }
 
     @Given("^I verify API JSON Object \"(.*)\" equal to \"(.*)\"\$")
-    void verifyJsonObjectEqualTo(String sQuery, String sExpectedValue) {
+    public void verifyJsonObjectEqualto(String sQuery, String sExpectedValue) {
         sQuery = Context.getInstance().getData(sQuery)
         sExpectedValue = Context.getInstance().getData(sExpectedValue)
 
@@ -222,7 +222,7 @@ class JSONSteps {
     //This method will act on String Array List
     boolean validateJsonArray(ArrayList<String> list, String sOperation, @Optional String sValue) {
         boolean result = false
-        ArrayList<String> actualList = new ArrayList<>()
+        ArrayList<String> actualList;
         switch (sOperation) {
             case ("ascending"):
                 actualList = list

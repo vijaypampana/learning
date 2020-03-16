@@ -7,7 +7,7 @@ import org.testng.annotations.AfterClass
 
 @CucumberOptions(
         features = "src/test/resources/feature",
-        tags = ["@smoke or @regression"],
+        tags = ["@Weather_API"],
         //plugin = ["pretty", "html:target/cucumber-html-report", "json:target/cucumber.json",
         plugin = ["cucumber.runtime.formatter.CustomFormatter:Extent"],
         glue = ["learning.BDD.utilities.api"],

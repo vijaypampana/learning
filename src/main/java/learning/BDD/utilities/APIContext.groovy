@@ -52,6 +52,10 @@ class APIContext {
         if(sContentType.isEmpty())
             requestSpecBuilder.setContentType(sContentType)
 
+        if(basicAuthScheme!=null) {
+            requestSpecBuilder.setAuth(getBasicAuthScheme());
+        }
+
         //Ignore SSL Certificate Validation
         requestSpecBuilder.setConfig(RestAssuredConfig.config().sslConfig(SSLConfig.sslConfig().allowAllHostnames().relaxedHTTPSValidation()))
         // JSON - Converts numbers with decimal to Double
@@ -156,7 +160,7 @@ class APIContext {
     }
 
     void clearBody() {
-        this.body ""
+        this.body = ""
     }
 
     BasicAuthScheme getBasicAuthScheme() {
@@ -164,6 +168,9 @@ class APIContext {
     }
 
     void setBasicAuthScheme(String userName, String password) {
+        if(basicAuthScheme == null) {
+            basicAuthScheme = new BasicAuthScheme();
+        }
         this.basicAuthScheme.setUserName(userName)
         this.basicAuthScheme.setPassword(password)
     }
