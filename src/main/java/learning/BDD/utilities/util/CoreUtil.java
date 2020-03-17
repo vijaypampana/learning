@@ -53,7 +53,6 @@ public class CoreUtil {
             return PhoneNumberUtil.formatPhoneNumber(matcher.group(1), matcher.group(2));
         }
 
-        /*
         //Matching Random util
         matcher = Pattern.compile(RandomUtil.getPattern()).matcher(value);
         if(matcher.find()) {
@@ -63,6 +62,9 @@ public class CoreUtil {
                 return RandomUtil.valueOf(matcher.group(1)).storeRandom(matcher.group(2), matcher.group(3));
             }
         }
+
+        /*
+
 
 
 

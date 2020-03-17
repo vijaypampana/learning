@@ -26,7 +26,7 @@ public class CoreUtilTest {
         Assert.assertEquals(CoreUtil.process("[PHONENUMBER_SPACE_EXTN~~12345645120]"), "1 (234) 564 5120");
     }
 
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void dateUtilTest() {
         Assert.assertEquals(CoreUtil.process("[TODAY~~dd-MM-yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         Assert.assertEquals(CoreUtil.process("[TODAY~~dd/MM/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -47,6 +47,12 @@ public class CoreUtilTest {
         //format Date
         Assert.assertEquals(CoreUtil.process("[1982-02-11~~yyyy-MM-dd~~dd/MM/yyyy]"), "02/11/1982");
 
+    }
+
+    @Test
+    public void randomUtilTest() {
+        System.out.println(CoreUtil.process("[ALPHA~~15]"));
+        System.out.println(CoreUtil.process("[NUMERIC~~9]"));
     }
 
 }
