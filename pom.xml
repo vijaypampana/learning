@@ -17,7 +17,7 @@
         <cucumber.version>2.4.0</cucumber.version>
         <extend.reports.version>3.1.5</extend.reports.version>
         <appium.version>7.0.0</appium.version>
-        <jackson.version>2.9.4</jackson.version>
+        <jackson.version>2.10.3</jackson.version>
         <surefire.forkNumber>5</surefire.forkNumber>
         <perfecto.reportium.version>2.2.9</perfecto.reportium.version>
         <galen.java.version>2.4.4</galen.java.version>
