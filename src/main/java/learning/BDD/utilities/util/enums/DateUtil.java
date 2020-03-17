@@ -55,7 +55,7 @@ public enum DateUtil {
     public static String getDate(String date, String actualFormat, String desiredFormat) {
         try {
             return LocalDate.parse(date, DateTimeFormatter.ofPattern(actualFormat)).format(DateTimeFormatter.ofPattern(desiredFormat));
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return e.getMessage();
         }
     }

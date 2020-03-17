@@ -23,8 +23,18 @@ public class CoreUtil {
     private static String getReplacement(String value) {
         value = decode(value);
 
+        //Matching Random util
+        Matcher matcher = Pattern.compile(RandomUtil.getPattern()).matcher(value);
+        if(matcher.find()) {
+            if(matcher.groupCount() == 2) {
+                return RandomUtil.valueOf(matcher.group(1)).getRandom(matcher.group(2));
+            } else if(matcher.groupCount() == 3) {
+                return RandomUtil.valueOf(matcher.group(1)).storeRandom(matcher.group(2), matcher.group(3));
+            }
+        }
+
         //Matching API Response
-        Matcher matcher = Pattern.compile(DataUtil.getAPIPattern()).matcher(value);
+         matcher = Pattern.compile(DataUtil.getAPIPattern()).matcher(value);
         if(matcher.find()) {
             return DataUtil.queryApiResponse(matcher.group(1), matcher.group(2));
         }
@@ -53,15 +63,7 @@ public class CoreUtil {
             return PhoneNumberUtil.formatPhoneNumber(matcher.group(1), matcher.group(2));
         }
 
-        //Matching Random util
-        matcher = Pattern.compile(RandomUtil.getPattern()).matcher(value);
-        if(matcher.find()) {
-            if(matcher.groupCount() == 2) {
-                return RandomUtil.valueOf(matcher.group(1)).getRandom(matcher.group(2));
-            } else if(matcher.groupCount() == 3) {
-                return RandomUtil.valueOf(matcher.group(1)).storeRandom(matcher.group(2), matcher.group(3));
-            }
-        }
+
 
         /*
 

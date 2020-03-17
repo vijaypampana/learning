@@ -1,4 +1,7 @@
+import io.restassured.RestAssured;
+import io.restassured.response.ValidatableResponse;
 import learning.BDD.utilities.util.CoreUtil;
+import learning.BDD.utilities.util.DataUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -45,14 +48,32 @@ public class CoreUtilTest {
         Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 
         //format Date
-        Assert.assertEquals(CoreUtil.process("[1982-02-11~~yyyy-MM-dd~~dd/MM/yyyy]"), "02/11/1982");
+        Assert.assertEquals(CoreUtil.process("[1982-02-11~~yyyy-MM-dd~~dd/MM/yyyy]"), "11/02/1982");
+
+        //Matching content with data
+        String sTestData = "The Cancel Date should be after %s for testing purpose";
+        Assert.assertEquals(CoreUtil.process(String.format(sTestData, "[TODAY~~dd-MM-yyyy]")), String.format(sTestData, LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+        Assert.assertEquals(CoreUtil.process(String.format(sTestData, "[YESTERDAY~~dd-MM-yyyy-1M-1Y]")), String.format(sTestData, LocalDateTime.now().plusDays(-1).plusMonths(-1).plusYears(-1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
 
     }
 
-    @Test
+    @Test(enabled = false)
     public void randomUtilTest() {
         System.out.println(CoreUtil.process("[ALPHA~~15]"));
         System.out.println(CoreUtil.process("[NUMERIC~~9]"));
+        //DataUtil.store will append threadId also to the key and the same will be used by retrieving the key from dataMap. It is done in parseKey Method
+        CoreUtil.process("[ALPHA_NUMERIC~~10~~AlphaNumeric]");
+        System.out.println(DataUtil.retrieve("AlphaNumeric"));
+        System.out.println(CoreUtil.process("[ALPHA_SPECIAL~~6]"));
+        System.out.println(CoreUtil.process("[NUMERIC_SPECIAL~~6]"));
+        System.out.println(CoreUtil.process("[ALPHA_NUMERIC_SPECIAL~~12]"));
+    }
+
+    @Test
+    public void dataUtilAPIHTML() {
+        ValidatableResponse response = RestAssured.given().when().get("https://cdc.gov").then().statusCode(200);
+        Assert.assertEquals(DataUtil.queryApiResponse("HTML", "**.findAll{it.href == '//fastlane.rubiconproject.com'}"), "");
+        System.out.println("test");
     }
 
 }

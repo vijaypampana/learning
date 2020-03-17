@@ -21,7 +21,7 @@ class DataUtil {
         return Thread.currentThread().getId()
     }
 
-    //Not sure what this method will do
+    //This method will append the thread id to the key before storing to dataMap
     private static String parseKey(String skey) {
         skey = skey.replace(" ", "")
         Matcher matcher = Pattern.compile("\\[(.*?)]\$").matcher(skey)
