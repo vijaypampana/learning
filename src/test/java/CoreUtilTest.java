@@ -28,21 +28,21 @@ public class CoreUtilTest {
 
     @Test(enabled = true)
     public void dateUtilTest() {
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd-MM-yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd/MM/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[YESTERDAY~~MM-dd-yyyy]"), LocalDateTime.now().plusDays(-1).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("MM-dd-yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TOMORROW~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(1).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[NEXT_MONTH~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[PREVIOUS_MONTH~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(-1).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[NEXT_YEAR~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[PREVIOUS_YEAR~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(-1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-//
-//        //Using Override values
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy1Y+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(1).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy-100D]"), LocalDateTime.now().plusDays(-100).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
-//        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd-MM-yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd/MM/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        Assert.assertEquals(CoreUtil.process("[YESTERDAY~~MM-dd-yyyy]"), LocalDateTime.now().plusDays(-1).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("MM-dd-yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TOMORROW~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(1).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        Assert.assertEquals(CoreUtil.process("[NEXT_MONTH~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        Assert.assertEquals(CoreUtil.process("[PREVIOUS_MONTH~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(-1).plusYears(0).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        Assert.assertEquals(CoreUtil.process("[NEXT_YEAR~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+        Assert.assertEquals(CoreUtil.process("[PREVIOUS_YEAR~~MM/dd/yyyy]"), LocalDateTime.now().plusDays(0).plusMonths(0).plusYears(-1).format(DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+
+        //Using Override values
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy1Y+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(1).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy-100D]"), LocalDateTime.now().plusDays(-100).plusMonths(0).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
+        Assert.assertEquals(CoreUtil.process("[TODAY~~dd MMM yyyy+1M-1D]"), LocalDateTime.now().plusDays(-1).plusMonths(1).plusYears(0).format(DateTimeFormatter.ofPattern("dd MMM yyyy")));
 
         //format Date
         Assert.assertEquals(CoreUtil.process("[1982-02-11~~yyyy-MM-dd~~dd/MM/yyyy]"), "02/11/1982");
