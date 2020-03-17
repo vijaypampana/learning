@@ -13,7 +13,7 @@ public class CoreUtil {
     public static String process(String value) {
         Matcher matcher = Pattern.compile(MY_PATTERN).matcher(value);
         if(matcher.find()) {
-            String replacement = String. valueOf(getReplacement(matcher.group()));
+            String replacement = String.valueOf(getReplacement(matcher.group()));
             return process(matcher.replaceFirst(replacement.replace("$", "\\$")));
         } else {
             return decode(value);
@@ -29,20 +29,8 @@ public class CoreUtil {
             return DataUtil.queryApiResponse(matcher.group(1), matcher.group(2));
         }
 
-        /*
-        //Matching Random util
-        matcher = Pattern.compile(RandomUtil.getPattern()).matcher(value);
-        if(matcher.find()) {
-            if(matcher.groupCount() == 2) {
-                return RandomUtil.valueOf(matcher.group(1)).getRandom(matcher.group(2));
-            } else if(matcher.groupCount() == 3) {
-                return RandomUtil.valueOf(matcher.group(1)).storeRandom(matcher.group(2), matcher.group(3));
-            }
-        }
-
-
         //Matching DateUtil
-        matcher = Pattern.compile(DateUtil.getPattern()).matcher(value);
+        matcher = Pattern.compile(DateUtil.getDatePattern()).matcher(value);
         if(matcher.find()) {
             return DateUtil.valueOf(matcher.group(1)).getDate(matcher.group(2));
         }
@@ -51,12 +39,6 @@ public class CoreUtil {
         matcher = Pattern.compile(DateUtil.getFormatPattern()).matcher(value);
         if(matcher.find()) {
             return DateUtil.getDate(matcher.group(1), matcher.group(2), matcher.group(3));
-        }
-
-        //Matching Data Transform
-        matcher = Pattern.compile(DataTransformUtil.getPattern()).matcher(value);
-        if(matcher.find()) {
-            return DataTransformUtil.valueOf(matcher.group(1)).getTransformedValue(matcher.group(2));
         }
 
         //Matching Currency Util
@@ -70,6 +52,32 @@ public class CoreUtil {
         if(matcher.find()) {
             return PhoneNumberUtil.formatPhoneNumber(matcher.group(1), matcher.group(2));
         }
+
+        /*
+        //Matching Random util
+        matcher = Pattern.compile(RandomUtil.getPattern()).matcher(value);
+        if(matcher.find()) {
+            if(matcher.groupCount() == 2) {
+                return RandomUtil.valueOf(matcher.group(1)).getRandom(matcher.group(2));
+            } else if(matcher.groupCount() == 3) {
+                return RandomUtil.valueOf(matcher.group(1)).storeRandom(matcher.group(2), matcher.group(3));
+            }
+        }
+
+
+
+
+
+
+        //Matching Data Transform
+        matcher = Pattern.compile(DataTransformUtil.getPattern()).matcher(value);
+        if(matcher.find()) {
+            return DataTransformUtil.valueOf(matcher.group(1)).getTransformedValue(matcher.group(2));
+        }
+
+
+
+
 
         //Matching MobileText by OS
         matcher = Pattern.compile(MobileUtil.getMobilePattern()).matcher(value);

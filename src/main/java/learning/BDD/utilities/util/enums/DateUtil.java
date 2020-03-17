@@ -17,7 +17,7 @@ public enum DateUtil {
     NEXT_YEAR(0, 0, 1),
     PREVIOUS_YEAR(0, 0, -1);
 
-    private int daysToAdd, monthsToAdd, yearsToAdd;
+    private int daysToAdd, monthsToAdd, yearsToAdd, daysToOverride, monthsToOverride, yearsToOverride;
     DateUtil(int daysToAdd, int monthsToAdd, int yearsToAdd) {
         this.daysToAdd = daysToAdd;
         this.monthsToAdd = monthsToAdd;
@@ -61,16 +61,38 @@ public enum DateUtil {
     }
 
     public String getDate(String format) {
+        daysToOverride = getDaysToAdd();
+        monthsToOverride = getMonthsToAdd();
+        yearsToOverride = getYearsToAdd();
         format = override(format);
-        return LocalDateTime.now().plusDays(getDaysToAdd()).plusMonths(getMonthsToAdd()).plusYears(getYearsToAdd()).format(DateTimeFormatter.ofPattern(format));
+        return LocalDateTime.now().plusDays(daysToOverride).plusMonths(monthsToOverride).plusYears(yearsToOverride).format(DateTimeFormatter.ofPattern(format));
     }
 
     private String override(String format) {
         Matcher matcher = Pattern.compile(getOverridePattern()).matcher(format);
         if(matcher.find()) {
-
+            update(DatePart.valueOf(matcher.group(2)), Integer.parseInt(matcher.group(1)));
+            return override(matcher.replaceFirst(""));
         }
-        return null;
+        return format;
+    }
+
+    private void update(DatePart datePart, int value) {
+        switch (datePart) {
+            case D:
+                daysToOverride += value;
+                break;
+            case M:
+                monthsToOverride += value;
+                break;
+            case Y:
+                yearsToOverride += value;
+                break;
+        }
+    }
+
+    public enum DatePart {
+        D,M,Y;
     }
 
 }
