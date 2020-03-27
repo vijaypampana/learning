@@ -632,6 +632,8 @@ class Context extends APIContext {
             options.addArguments("--start-maximized")
             options.addArguments("disable-infobars")
             options.setExperimentalOption("useAutomationExtension", false)
+            options.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+            options.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         } else {
             Map<String, String> mobileEmulation = new HashMap<>()
             mobileEmulation.put("deviceName", sDeviceName)

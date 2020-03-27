@@ -22,6 +22,7 @@ import learning.BDD.utilities.utilEnum.XpathFormatter
 import org.openqa.selenium.By
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.ScreenOrientation
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import org.testng.Assert
@@ -605,7 +606,12 @@ class AppiumSteps {
         oWebDriverWait.until(ExpectedConditions.textToBePresentInElementValue(mobileElement, sValue))
     }
 
-
+    @Given("^I verify \"(.*)\" exactly overlaps \"(.*)\"\$")
+    public void verifyElementPositionExactlyOverlap(@Transform(TransformToMobileElement.class) WebElement webElementOne, @Transform(TransformToMobileElement.class) WebElement webElementTwo) {
+        if(!(webElementOne.getAttribute("bounds").equals(webElementTwo.getAttribute("bounds")))) {
+            Context.getInstance().getReports().stepFail("");
+        }
+    }
 
 
 

@@ -17,7 +17,11 @@ public class FuncExample1 {
 
     @Test
     public void readFirst40Error() throws IOException {
-        List<String> errors = Files.lines(Paths.get("src/main/java/learning/java8/Functional/logFile.log")).filter(l -> l.startsWith("ERROR")).limit(10).collect(toList());
+        List<String> errors = Files.lines(Paths.get("src/main/java/learning/java8/Functional/logFile.log"))
+                                    .filter(l -> l.startsWith("ERROR"))
+                                    .limit(10)
+                                    .collect(toList());
+        errors.stream().forEach(l -> System.out.println(l));
         System.out.println("test");
         //Collections.unModifiableMAP/Array/List
     }
