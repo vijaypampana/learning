@@ -24,7 +24,7 @@ class HeaderSteps {
         }
     }
 
-    @Given("^I (?:add|update) API header 'Authorization' as \"(.*)\"\$")
+    @Given("^I (?:add|update) API Authorization header as \"(.*)\"\$")
     void addAuthorizationHeader(String sValue) {
         addHeader(HttpHeaders.AUTHORIZATION, Context.getInstance().getData(sValue))
     }

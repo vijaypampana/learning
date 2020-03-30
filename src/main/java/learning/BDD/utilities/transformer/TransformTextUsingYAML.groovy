@@ -7,6 +7,6 @@ class TransformTextUsingYAML extends Transformer<String> {
 
     @Override
     String transform(String sValue) {
-        Context.getInstance().getData(sValue)
+        return Context.getInstance().getData(sValue)
     }
 }

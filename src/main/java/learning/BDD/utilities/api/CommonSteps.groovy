@@ -31,7 +31,7 @@ class CommonSteps {
     }
 
     @Given("^I set API Basic Authentication using \"(.*)\" and \"(.*)\"\$")
-    void setBasicPath(String sUserName, String sPassword) {
+    void setBasicAuth(String sUserName, String sPassword) {
         Context.getInstance().setBasicAuthScheme(sUserName, sPassword)
     }
 
@@ -190,6 +190,8 @@ class CommonSteps {
                     }
                 }
             }
+            Context.getInstance().getReports().stepCode(builder.toString())
+            return builder.toString()
         }
     }
 
