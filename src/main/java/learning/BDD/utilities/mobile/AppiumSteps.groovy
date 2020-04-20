@@ -9,6 +9,8 @@ import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.nativekey.AndroidKey
 import io.appium.java_client.android.nativekey.KeyEvent
 import io.appium.java_client.ios.IOSDriver
+import io.appium.java_client.pagefactory.AndroidFindBy
+import io.appium.java_client.pagefactory.iOSXCUITFindBy
 import io.appium.java_client.touch.WaitOptions
 import io.appium.java_client.touch.offset.ElementOption
 import io.appium.java_client.touch.offset.PointOption
@@ -613,7 +615,9 @@ class AppiumSteps {
         }
     }
 
-
+    @iOSXCUITFindBy()
+    @AndroidFindBy()
+    public WebElement testElementc
 
 
 

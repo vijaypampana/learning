@@ -1,0 +1,35 @@
+This file is created to document the Mobile Identifiers
+=======================================================
+
+Android:
+--------
+
+id              :   com.test.mobile.dubug:id/button_login           (ignore everything before "/")
+accessibility   :   language specific id, should not be used when multi lingual support is needed
+uiAutomator     :   UiSelector properties and methods
+className       :   Can have multi reference with in the same page
+xpath           :   last option
+tagName
+priority
+image
+Espresso
+
+
+IOS:
+----
+https://appiumpro.com/editions/8-how-to-find-elements-in-ios-not-by-xpath
+
+Identifiers supported in XCUITest (class name, id, name, accessibility id, ios predicate String, ios class chain, xpath)
+
+className       :   Can have multi reference with in the same page
+accessibility   :   language specific id
+id              :   Equal to Value property - if Accessibility Identifier is not present
+Link Text       :
+Predicate String:   Uses IOS native properties and methods
+                    https://github.com/facebookarchive/WebDriverAgent/wiki/Predicate-Queries-Construction-Rules
+                    https://github.com/facebookarchive/WebDriverAgent/wiki/class-chain-queries-construction-rules
+                    https://github.com/facebookarchive/WebDriverAgent/wiki/How-To-Achieve-The-Best-Lookup-Performance
+class Chain     :
+xpath           :
+tagname         :
+Espresso
