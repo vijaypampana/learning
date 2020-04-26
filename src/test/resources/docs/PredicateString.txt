@@ -1,0 +1,108 @@
+Predicate String:
+================
+
+Tag:
+----
+xpath           : //XCUIELementTypeCell
+IOS Predicate   : type=='//XCUIELementTypeCell'
+
+Tag with an attribute:
+----------------------
+xpath           : //XCUIELementTypeCell[@name='General']
+IOS Predicate   : type=="//XCUIELementTypeCell" and name=='General'
+
+Basic Logical Operations: (AND, &&), (OR, ||), (NOT, !)
+-------------------------------------------------------
+xpath           : //XCUIELementTypeCell[@name='General'][@enabled='true'][@visible='true']
+xpath           : //XCUIELementTypeCell[@name='General' and @enabled='true' && @visible='true']
+xpath           : //XCUIELementTypeCell[@name='General' or @enabled='true' || @visible='true']
+xpath           : //XCUIELementTypeCell[not(@name='General' and @visible='true')]
+IOS Predicate   : type=='//XCUIELementTypeCell' and name=='General' && enabled=='true' and visible=='false'
+IOS Predicate   : type=='//XCUIELementTypeCell' and name=='General' && enabled==1 and visible==0
+IOS Predicate   : type=='//XCUIELementTypeCell' and name=='General' && (enabled==1 || visible==0)
+IOS Predicate   : type=='//XCUIELementTypeCell' and name=='General' NOT (enabled==1 OR visible==0)
+
+Rect: (rect.y, rect.x, rect.width, rect.height)
+-----------------------------------------------
+xpath           : //XCUIELementTypeCell[@name='General'][@y='291']
+xpath           : //XCUIELementTypeCell[@name='General'][@y<'291']
+xpath           : //XCUIELementTypeCell[@name='General'][@y<'291'][@width<'360']
+xpath           : //XCUIELementTypeCell[@name='General'][@y>='291' and @y<='360']
+IOS Predicate   : type=='//XCUIELementTypeCell' and rect.y='291'
+IOS Predicate   : type=='//XCUIELementTypeCell' and rect.y BETWEEN{291,360}
+
+String Comparison:
+------------------
+xpath           : //*[starts-with(@name,'Gene')]
+xpath           : //*[contains(@name,'nera')]
+IOS Predicate   : name BEGINSWITH("Gene")
+IOS Predicate   : name CONTAINS("nera")
+IOS Predicate   : name ENDSWITH("ral")
+IOS Predicate   : name LIKE("Genera?")
+IOS Predicate   : name MATCHES('\\w{4}')                    #Any name with 4 chars
+IOS Predicate   : name MATCHES(''\\d{1,4}\\.\\d{2} GB')     #12.48 GB
+IOS Predicate   : name MATCHES('(?i:.*general)')            #Case insensitive
+
+IN:
+---
+xpath           : //XCUIELementTypeCell[@value='General' or @value='Privacy']
+IOS Predicate   : type=='XCUIELementTypeCell' and value IN {'General','Privacy'}
+
+Class Chain Queries:
+====================
+
+Relative Element:
+-----------------
+xpath           : //XCUIElementTypeNavigationBar
+Class Chain     : **/XCUIElementTypeNavigationBar
+
+Class Chain with Predicate:
+---------------------------
+xpath           : //XCUIElementTypeNavigationBar[@name='General']
+Class Chain     : **/XCUIElementTypeNavigationBar[`name=='General'`]
+
+class chain to select direct child:
+-----------------------------------
+xpath           : //XCUIElementTypeNavigationBar/XCUIElementTypeCell
+Class Chain     : **/XCUIElementTypeNavigationBar/XCUIElementTypeCell
+
+Class chain to select all descending:
+-------------------------------------
+xpath           : //XCUIElementTypeNavigationBar/XCUIElementTypeCell
+Class Chain     : **/XCUIElementTypeNavigationBar/**/XCUIElementTypeCell
+
+Selecting element at index:
+---------------------------
+xpath           : (//XCUIElementTypeNavigationBar/XCUIElementTypeCell)[8]
+Class Chain     : **/XCUIElementTypeNavigationBar/**/XCUIElementTypeCell[8]
+
+Selecting last element:
+-----------------------
+xpath           : (//XCUIElementTypeNavigationBar/XCUIElementTypeCell)[last()]
+Class Chain     : **/XCUIElementTypeNavigationBar/**/XCUIElementTypeCell[-1]
+
+Apply condition for descendent:
+-------------------------------
+xpath           : //XCUIElementTypeNavigationBar[./XCUIElementTypeCell[@name='General']]
+Class Chain     : **/XCUIElementTypeNavigationBar[$type='XCUIElementTypeCell' and name='General'$]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,131 @@
+UISelector: Android
+===================
+
+> resourceId:
+-------------
+xpath           :   //*[@resource-id="com.test.mobile...:id/button_login"]
+UiSelector      :   UiSelector().resourceId("com.android.vending:id/search_box_idle_text")
+
+> resourceIdMatches:
+--------------------
+xpath           :   //*[contains(@resource-id,":id/search_box_idle_text")]
+UiSelector      :   UiSelector().resourceIdMatches(".*:id/search_box_idle_text")
+
+> className:
+------------
+xpath           :   //android.widget.EditText
+UiSelector      :   UiSelector().className("android.widget.EditText")
+
+> classNameMatches:
+-------------------
+UiSelector      :   UiSelector().classNameMatches("\\w+\\s{1}\\w+")
+
+> text:
+-------
+xpath           :   //*[@text='Forgot Username']
+UiSelector      :   UiSelector().text("Forgot Username")
+
+> textContains:
+---------------
+xpath           :   //*[contains(@text,'Forgot Username')]
+UiSelector      :   UiSelector().textContains("Forgot Username")
+
+> startswith:
+-------------
+xpath           :   //*[starts-with(@text,'Forgot')]
+UiSelector      :   UiSelector().textStartsWith("Forgot")
+
+> textMatches:
+--------------
+UiSelector      :   UiSelector().textMatches(REGEX)
+
+> Checkable:
+------------
+xpath           : //android.widget.EditText[@checkable="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").checkable(false)
+
+> Checked:
+----------
+xpath           : //android.widget.EditText[@checked="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").checked(false)
+
+clickable:
+----------
+xpath           : //android.widget.EditText[@clickable="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").clickable(false)
+
+enabled:
+--------
+xpath           : //android.widget.EditText[@enabled="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").enabled(false)
+
+focusable:
+----------
+xpath           : //android.widget.EditText[@focusable="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").focusable(false)
+
+focused:
+--------
+xpath           : //android.widget.EditText[@focused="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").focused(false)
+
+scrollable:
+-----------
+xpath           : //android.widget.EditText[@scrollable="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").scrollable(false)
+
+selected:
+---------
+xpath           : //android.widget.EditText[@selecteded="false"]
+UiSelector      : UiSelector().className("android.widget.EditText").selected(false)
+
+description:
+------------
+xpath           : //android.widget.EditText[@content-desc="login-home-uname"]
+UiSelector      : UiSelector().className("android.widget.EditText").description("login-home-uname")
+
+descriptionContains:
+--------------------
+xpath           : //android.widget.EditText[contains(@content-desc,"login-home-uname")]
+UiSelector      : UiSelector().className("android.widget.EditText").descriptionContains("login-home-uname")
+
+longClickable:
+------------
+xpath           : //android.widget.EditText[@long-Clickable="true"]
+UiSelector      : UiSelector().className("android.widget.EditText").long-Clickable("true")
+
+packageName:
+------------
+xpath           : //android.widget.EditText[@package="com.test.mobile..."]
+UiSelector      : UiSelector().className("android.widget.EditText").packageName("com.test.mobile...")
+
+packageNameMatches:
+-------------------
+UiSelector      :   UiSelector().className("android.widget.EditText").packageNameMatches("\\w+\\s{1}\\w+")
+
+> Parent
+
+    index:
+    ------
+    xpath           :   //android.widget.Button[@index="2"]
+    UiSelector      :   UiSelector().className("android.widget.Button").index(2)
+
+    instance:
+    ---------
+    xpath           :   (//*[@class="android.widget.Button')[2]
+    UiSelector      :   UiSelector().className("android.widget.Button").instance(2)
+
+> childSelector:
+----------------
+examples:
+    <android.widget.FrameLayout>
+        <android.widget.EditText context-desc="login-home-uname" ...>
+
+xpath           :   //*[@class="android.widget.FrameLayout"]/*[@context-desc="login-home-uname"]
+UiSelector      :   UiSelector().className("android.widget.FrameLayout").childSelector(UiSelector().description("login-home-uname"))
+
+Multiple Attributes: (AND Operator)
+--------------------
+xpath       :   //*[@class="android.widget.Button" and @text="Forgot Username"]
+UiSelector  :   UiSelector().className("android.widget.Button").text("Forgot Username")
+
